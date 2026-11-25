@@ -46,7 +46,7 @@ main h2{font-size:28px;margin-bottom:4px}
 #cta:empty{display:none}
 #cta .btn{pointer-events:auto;display:block;width:100%;max-width:860px;margin:0 auto;min-height:54px;font-size:17px;box-shadow:0 8px 20px -8px rgba(0,0,0,.4)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(140px + env(safe-area-inset-bottom));z-index:9;background:#1d2a22;color:#fff;font-size:14px;padding:10px 16px;border-radius:12px;max-width:min(92vw,520px);box-shadow:0 8px 24px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .25s}
-.toast.on{opacity:1}.toast.act{pointer-events:auto;display:flex;align-items:center;gap:4px;white-space:nowrap}.toast .undo{margin-left:12px;border:0;background:none;color:#cfe0a8;font:700 14px Figtree,sans-serif;text-decoration:underline;cursor:pointer;min-height:32px}
+.toast.on{opacity:1}.toast.act{pointer-events:auto;display:flex;align-items:center;gap:4px;width:min(92vw,420px);justify-content:space-between}.toast .undo{flex:none;white-space:nowrap}.toast .undo{margin-left:12px;border:0;background:none;color:#cfe0a8;font:700 14px Figtree,sans-serif;text-decoration:underline;cursor:pointer;min-height:32px}
 .pbar{display:flex;gap:10px;align-items:center;width:100%;border:0;background:var(--warn);color:var(--warnink);font:600 15px Figtree,sans-serif;border-radius:12px;padding:12px 14px;margin:12px 0 6px;cursor:pointer;text-align:left;min-height:48px}.pbar .chev{margin-left:auto;font-size:20px;line-height:1}
 .pd{width:9px;height:9px;border-radius:50%;background:var(--or);flex:none}
 .it2{background:var(--bg);transition:background .15s}.it2.swl{background:var(--warn)}.it2.swr{background:var(--soft)}
@@ -66,7 +66,9 @@ main h2{font-size:28px;margin-bottom:4px}
 #cook .tm{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}#cook .tm button{border:0;background:var(--soft);color:var(--g);border-radius:12px;padding:10px 14px;font:700 17px Figtree,sans-serif;cursor:pointer;min-height:48px}
 #cook .run{background:var(--g);color:#fff;border-radius:12px;padding:10px 14px;font:700 22px 'Courier Prime',monospace;display:flex;justify-content:space-between;align-items:center;margin:8px 0}#cook .run button{border:0;background:none;color:#fff;font:600 14px Figtree,sans-serif;text-decoration:underline;cursor:pointer}
 #cook .nv{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:12px}#cook .nv .btn{min-height:60px;font-size:18px}
-.mopen{border-top:1px solid var(--line);padding-bottom:10px}.mopen .meal2{border-top:0}
+.mopen{border-top:1px solid var(--line);padding-bottom:10px}
+.ctx{font-size:14px;color:var(--mute);margin:8px 0 0}.ctx b{color:var(--ink)}.ctx .up{color:var(--warnink)}.ctx .dn{color:var(--g)}
+.fil{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px}.fil button{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:6px 12px;font:600 14px Figtree,sans-serif;cursor:pointer;min-height:38px;color:var(--ink)}.fil button[aria-pressed=true]{background:var(--g);color:#fff;border-color:var(--g)}.mopen .meal2{border-top:0}
 
 @media(min-width:900px){.bnav{position:sticky;top:64px;bottom:auto;display:flex;justify-content:center;gap:6px;border-top:0;border-bottom:1px solid var(--line);padding:6px}
 .tab{flex-direction:row;font-size:16px;min-height:48px;padding:8px 18px;border-radius:10px;gap:8px}.tab[aria-current=true]{background:var(--soft)}
@@ -302,6 +304,17 @@ const pkey=(p,f)=>(p+' '+(f||'')).trim().toLowerCase();
 
 let pmTmp={};
 let recOpen=null,openRow=null,superM=false,otraL='mercado',trayOpen=false,ordOpen=false,mOpen=null,wl=null,nuevos=new Set(),cook=null,tmr=null;
+const PLATOS=[['Merluza al horno con calabacín','p'],['Salmón en la Cosori con espárragos','p',1],['Lubina al papillote con patata','p'],['Pescadilla al vapor con patata y zanahoria','p'],['Bacalao al horno con pimiento asado','p'],['Dorada a la sal con ensalada','p'],['Gallo a la plancha con arroz blanco','p'],['Rape con verduras al vapor','p'],
+['Pechuga de pollo a la plancha con verduras','c'],['Pollo en la Cosori con boniato','c',1],['Pavo al limón con arroz blanco','c'],['Hamburguesa de pollo con ensalada','c',1],['Muslitos de pollo asados con patata','c',1],['Brochetas de pavo y calabacín','c',1],['Caldo de pollo con fideos finos','c'],['Solomillo de cerdo al horno con manzana','c'],
+['Tortilla francesa con ensalada','h'],['Tortilla de calabacín','h'],['Revuelto de champiñones y gambas','h'],['Huevos a la plancha con judías verdes','h'],
+['Crema de calabacín','v'],['Crema de calabaza y zanahoria','v'],['Judía verde y patata hervidas','v'],['Verduras asadas en la Cosori con queso fresco','v',1],['Arroz blanco con verduras salteadas','v'],['Ensalada templada de pasta y atún','v']].map(([n,t,c])=>({n,t,c:!!c}));
+function proponer(k0){const usad=new Set([...Object.values(S.menu),...Object.values(S.menuPrev||{})].map(v=>norm((v&&v.plato)||'')));
+  const pool=[...PLATOS,...S.libro.map(r=>({n:r.nombre,t:'m'}))].filter(x=>x.n&&!usad.has(norm(x.n)));
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  const ks=k0?[k0]:comidas().filter(c=>!c.plato&&!c.fuera&&!c.tupper).map(c=>c.k);let prevT='',n=0;
+  for(const k of ks){let ix=pool.findIndex(x=>x.t!==prevT);if(ix<0)ix=0;const x=pool.splice(ix,1)[0];if(!x)break;(S.menu[k]=S.menu[k]||{}).plato=x.n;prevT=x.t;n++}return n}
+function mediaSem(){const H=S.historial||[];return H.length>=2?H.reduce((a,x)=>a+x.total,0)/H.length:null}
+let libQ='',libF='';
 const yo=()=>window.CABAC_YO||(window.CABAC_SB?null:'S'),QUIEN={S:'Sora',M:'Mariate'};
 function detectaNuevos(aviso){let v=null;try{v=JSON.parse(localStorage.getItem('cabacVistos'))}catch(e){}const Y=yo();
   const N=Y&&v?S.compra.filter(i=>i.por&&i.por!==Y&&!v.includes(i.id)&&!i.hecho):[];N.forEach(i=>nuevos.add(i.id));
@@ -473,11 +486,11 @@ ${modo==='fuera'?'<p class="note" style="margin:0">Comemos fuera: no se compra n
 ${modo==='tupper'?'<p class="note" style="margin:6px 0 0">Comemos algo ya hecho: no lleva receta ni compra.</p>':''}
 ${modo==='cocina'&&c&&c.plato?(c.extra?`<div class="xrow"><span>Raciones de más para tupper</span><span class="qty"><button data-act="xmenos" data-k="${k}" aria-label="Una ración menos">−</button><b>${c.extra}</b><button data-act="xmas" data-k="${k}" aria-label="Una ración más">+</button></span></div>${rPon(c)}`:`<button class="mini" data-act="xmas" data-k="${k}" style="margin-top:8px">+ Hacer de más para tupper</button>`):''}</div>`}
 function rMealL(d,m){const k=d+'-'+m,v=S.menu[k]||{},modo=v.fuera?'fuera':v.tupper?'tupper':'cocina';
-  if(mOpen===k)return`<div class="mopen">${rMeal(d,m)}<button class="btn alt full" style="margin-top:6px" data-act="mopen" data-k="${k}">Listo</button></div>`;
+  if(mOpen===k)return`<div class="mopen">${rMeal(d,m)}<div class="row" style="margin-top:6px;gap:8px">${modo==='cocina'?`<button class="btn alt" style="flex:1" data-act="otraidea" data-k="${k}">✨ Otra idea</button>`:''}<button class="btn" style="flex:1" data-act="mopen" data-k="${k}">Listo</button></div></div>`;
   const c=comidas().find(x=>x.k===k),txt=modo==='fuera'?'Comemos fuera':(v.plato||'');
   const tg=modo==='tupper'?'<span class="tag">Tupper</span>':modo==='cocina'&&c&&c.extra?`<span class="tag">+${c.extra} tupper</span>`:'<span></span>';
   return`<button class="mline" data-act="mopen" data-k="${k}"><span class="ml">${m==='comida'?'Comida':'Cena'}</span><span class="mp ${txt&&modo!=='fuera'?'':'vac'}">${esc(txt||'Añadir plato')}</span>${tg}<span class="chev">›</span></button>`}
-V.menu=()=>`<h2>La semana</h2>${S.menuPrev&&!Object.values(S.menu).some(v=>v&&(v.plato||v.fuera||v.tupper))?`<button class="btn alt full" style="margin:8px 0 14px" data-act="repetir">↻ Repetir el menú de la semana pasada</button>`:''}
+V.menu=()=>`<h2>La semana</h2>${comidas().some(c=>!c.plato&&!c.fuera&&!c.tupper)?`<button class="btn alt full" style="margin:8px 0 14px" data-act="proponer">✨ Proponer platos ligeros para los huecos</button>`:''}${S.menuPrev&&!Object.values(S.menu).some(v=>v&&(v.plato||v.fuera||v.tupper))?`<button class="btn alt full" style="margin:8px 0 14px" data-act="repetir">↻ Repetir el menú de la semana pasada</button>`:''}
 ${Array.from({length:S.finde?7:5},(_,d)=>`<section class="day"><h3>${DIAS[d]}</h3>${rMealL(d,'comida')}${rMealL(d,'cena')}</section>`).join('')}
 <button class="btn alt full" data-act="finde">${S.finde?'Quitar sábado y domingo':'Añadir sábado y domingo'}</button>`;
 CTA.menu=()=>{const n=comidas().filter(cocina).length;return n?`<button class="btn" data-tab="recetas">Elegir recetas (${n} plato${n>1?'s':''}) →</button>`:''};
@@ -495,7 +508,7 @@ ${r.cosori?`<div class="cos">${esc(r.cosori)}</div>`:''}${Array.isArray(r.pasos)
 V.recetas=()=>{const cs=comidas().filter(cocina);
   if(!cs.length)return`<h2>Recetas</h2><div class="empty">Primero escribe en <b>Semana</b> qué vais a cocinar.</div><button class="btn full" data-tab="menu">Ir a la semana</button>`;
   const falta=cs.filter(c=>!S.recetas[c.k]||S.recetas[c.k].plato!==c.plato).length,eleg=cs.filter(c=>elegidaDe(c)).length;
-  return`<h2>Recetas</h2><p class="lead">Ligeras y sencillas para 2. Elige una por plato: tradicional, en la Cosori o tuya.</p>
+  return`<h2>Recetas</h2>
 <div class="prog2"><div class="pbar"><i style="width:${(eleg/cs.length*100).toFixed(0)}%"></i></div><span>${eleg} de ${cs.length} con receta</span></div>
 ${sample&&falta?`<button class="btn full" data-act="buscarTodo" ${busy?'disabled':''}>Proponer recetas para ${falta} plato${falta>1?'s':''}</button>`:''}
 ${!sample&&falta?'<p class="note">Para ideas de recetas, pídeselas a Claude en el chat y apúntalas con <b>Escribir la mía</b>.</p>':''}
@@ -527,11 +540,13 @@ ${g.merc?`<input data-ei="${i}" data-f="formato" value="${esc(g.formato)}" place
 <div class="row" style="margin-top:10px"><button class="btn alt" data-act="eadd">+ Ingrediente</button></div>
 <label class="fl">Pasos o notas (opcional, uno por línea)<textarea data-ed="pasos" rows="5">${esc(ed.pasos)}</textarea></label>
 <div class="row" style="margin-top:14px"><button class="btn" data-act="eguarda">Guardar receta</button><button class="btn alt" data-act="ecancel">Cancelar</button></div>`}
-  return`<h2>Mis recetas</h2><p class="lead">Tus recetas se quedan guardadas aunque cierres la semana. Luego, en <b>2 · Recetas</b>, elige cuál usar en cada plato.</p>
-<div class="row" style="margin-bottom:16px"><button class="btn" data-act="nueva">Nueva receta</button></div>
-${S.libro.length?`<div class="lists">${S.libro.map(r=>`<div class="box"><h3>${esc(r.nombre)}</h3><p class="note">${r.ingredientes.length} ingrediente${r.ingredientes.length!==1?'s':''}${r.ingredientes.some(g=>g.merc)?` · ${r.ingredientes.filter(g=>g.merc).length} tal cual de Mercadona`:''}</p>
+  const TIP={p:/merluza|salm[oó]n|lubina|dorada|bacalao|pescad|rape|gallo|at[uú]n|gamba|sepia|calamar|pez/,c:/pollo|pavo|cerdo|ternera|vacuno|conejo|carne|burger|hambur|lomo|solomillo/,v:/crema|verdura|calabac|ensalada|jud[ií]a|br[oó]coli|espinaca|calabaza|pur[eé]/},
+    L=S.libro.filter(r=>{const t=norm(r.nombre+' '+(r.pasos||''));return(!libQ||norm(r.nombre).includes(norm(libQ)))&&(!libF||(libF==='k'?/cosori|freidora/.test(t):TIP[libF].test(norm(r.nombre))))});
+  return`<div class="row between"><h2>Mis recetas</h2><button class="btn" data-act="nueva">+ Nueva</button></div>
+${S.libro.length>3?`<input type="search" id="libQ" value="${esc(libQ)}" placeholder="Buscar en mis recetas…" aria-label="Buscar en mis recetas" style="margin-top:10px"><div class="fil">${[['','Todas'],['p','Pescado'],['c','Carne'],['v','Verdura'],['k','Cosori']].map(([k,n])=>`<button data-act="libF" data-f="${k}" aria-pressed="${libF===k}">${n}</button>`).join('')}</div>`:''}
+${S.libro.length?(L.length?`<div class="lists">${L.map(r=>`<div class="box"><h3>${esc(r.nombre)}</h3><p class="note">${r.ingredientes.length} ingrediente${r.ingredientes.length!==1?'s':''}${r.ingredientes.some(g=>g.merc)?` · ${r.ingredientes.filter(g=>g.merc).length} tal cual de Mercadona`:''}</p>
 <div class="acts"><button class="mini" data-act="eedit" data-id="${esc(r.id)}">Editar</button>${borrando===r.id?`<button class="mini on" data-act="eborra" data-id="${esc(r.id)}">¿Seguro? Borrar</button><button class="mini" data-act="enoborra">No</button>`:`<button class="mini" data-act="eborrar" data-id="${esc(r.id)}">Borrar</button>`}</div></div>`).join('')}</div>`
-:`<div class="empty">Todavía no hay recetas tuyas. Crea una aquí o guarda alguna de las que te propongo con <b>Guardar en Mis recetas</b>.</div>`}`};
+:`<div class="empty">Nada con ese filtro.</div>`):`<div class="empty">Todavía no hay recetas tuyas. Crea una aquí o guarda alguna de las que te propongo con <b>Guardar en Mis recetas</b>.</div>`}`};
 
 function rCatList(){const q=norm(catQ),C=catItems().filter(c=>!q||norm(c.k).includes(q));
   if(!C.length)return`<div class="empty">${catQ?'Nada coincide con la búsqueda.':'El catálogo está vacío.'}</div>`;
@@ -584,7 +599,7 @@ V.compra=()=>{const it=S.compra;
     return`<div class="row between"><h2>En el súper</h2><button class="mini" data-act="super">Salir</button></div><div class="supbar" aria-live="polite">${fal.length?`Faltan <b>${fal.length}</b> de ${tot}`:'<b>¡Todo en el carro!</b>'}<div class="pbr"><i style="width:${pc}%"></i></div></div>
 <div class="sup">${secs().map(s=>{const g=fal.filter(i=>i.seccion===s);return g.length?`<div class="sec">${esc(s)}</div>${g.map(rRow).join('')}`:''}).join('')}
 ${car.length?`<div class="sec">En el carro (${car.length})</div>${car.map(rRow).join('')}`:''}</div>`}
-  let h=`${segC()}<div class="row between"><h2>Mercadona</h2>${it.length?`<button class="mini ${ordOpen?'on':''}" data-act="ordT">Pasillos</button>`:''}</div>${ordOpen?`<div class="box" style="margin:10px 0"><h3>Orden de los pasillos</h3><p class="note" style="margin:2px 0 8px">Ponlos en el orden en que recorréis el súper.</p>${secs().map((x,n,A)=>`<div class="ordr"><span>${esc(x)}</span><button data-act="secmv" data-d="-1" data-s="${esc(x)}" ${n?'':'disabled'} aria-label="Subir ${esc(x)}">↑</button><button data-act="secmv" data-d="1" data-s="${esc(x)}" ${n<A.length-1?'':'disabled'} aria-label="Bajar ${esc(x)}">↓</button></div>`).join('')}<button class="btn full" data-act="ordT">Listo</button></div>`:''}
+  const md=mediaSem(),TT=totales().t;let h=`${segC()}${md&&TT?`<p class="ctx">Esta semana <b>≈ ${eur(TT)}</b> · ${Math.abs(TT-md)<1?'como vuestra media':`<span class="${TT>md?'up':'dn'}">${eur(Math.abs(TT-md))} ${TT>md?'más':'menos'}</span> que vuestra media (${eur(md)})`}</p>`:''}<div class="row between"><h2>Mercadona</h2>${it.length?`<button class="mini ${ordOpen?'on':''}" data-act="ordT">Pasillos</button>`:''}</div>${ordOpen?`<div class="box" style="margin:10px 0"><h3>Orden de los pasillos</h3><p class="note" style="margin:2px 0 8px">Ponlos en el orden en que recorréis el súper.</p>${secs().map((x,n,A)=>`<div class="ordr"><span>${esc(x)}</span><button data-act="secmv" data-d="-1" data-s="${esc(x)}" ${n?'':'disabled'} aria-label="Subir ${esc(x)}">↑</button><button data-act="secmv" data-d="1" data-s="${esc(x)}" ${n<A.length-1?'':'disabled'} aria-label="Bajar ${esc(x)}">↓</button></div>`).join('')}<button class="btn full" data-act="ordT">Listo</button></div>`:''}
 <div class="sbox"><input type="search" id="qAdd" value="${esc(qAdd)}" placeholder="Añadir: escribe o pega de Mercadona…" autocomplete="off" aria-label="Añadir a la lista"><div id="sug">${rSug()}</div></div>${!qAdd.trim()?(()=>{const L=siempre();return L.length?`<div class="lds"><span class="lt">Lo de siempre</span><div class="chips">${L.map(c=>`<button data-act="cadd" data-c="${esc(c.k)}" aria-label="Añadir ${esc(c.n)}">${esc(corto(c.n))}</button>`).join('')}</div></div>`:''})():''}
 ${busy?`<p class="prog">${esc(busy)}</p>`:''}${rTray()}`;
   if(!it.length)h+=`<div class="empty">La lista está vacía. Cuando elijas recetas, la lista se hará sola. También puedes añadir cosas con el buscador.</div>`;
@@ -638,7 +653,7 @@ ${sample?`${imgOK?`<label class="fl">Foto o captura del ticket<input type="file"
   if(!H.length)return h+`<div class="empty" style="margin-top:14px">Aquí verás cuánto se va cada semana en Mercadona, mercado, droguería y farmacia.</div>`;
   const max=Math.max(...H.map(x=>x.total),1),media=H.reduce((a,x)=>a+x.total,0)/H.length,cols=[{k:'m',n:'Mercadona',c:'var(--g)'},...OTRAS];
   h+=`<h3 style="margin-top:22px">Historial</h3><p><b>Media semanal:</b> ${eur(media)} · <b>${H.length}</b> semana${H.length>1?'s':''}</p><div class="row note" style="margin-bottom:8px">${cols.map(c=>`<span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${c.c}"></i> ${c.n}</span>`).join('')}</div><div class="hist">`;
-  h+=[...H].reverse().map(x=>`<div class="hr"><span>${esc(fSem(x.semana))}</span><div class="bar" style="width:${(x.total/max*100).toFixed(1)}%">${cols.map(c=>{const v=c.k==='m'?x.mercadona:(x.otras||{})[c.k]||0;return v?`<i style="width:${(v/x.total*100).toFixed(1)}%;background:${c.c}" title="${c.n}: ${eur(v)}"></i>`:''}).join('')}</div><span class="num">${eur(x.total)}${x.real?'':' <small>≈</small>'}</span></div>`).join('');
+  h+=[...H].reverse().map(x=>`<div class="hr"><span>${esc(fSem(x.semana))}</span><div class="bar" style="width:${(x.total/max*100).toFixed(1)}%">${cols.map(c=>{const v=c.k==='m'?x.mercadona:(x.otras||{})[c.k]||0;return v?`<i style="width:${(v/x.total*100).toFixed(1)}%;background:${c.c}" title="${c.n}: ${eur(v)}"></i>`:''}).join('')}</div><span class="num">${eur(x.total)}${x.real?(x.estimado?`<small style="display:block;font-weight:400;color:var(--mute)">estimado ${eur(x.estimado)}</small>`:''):' <small>≈</small>'}</span></div>`).join('');
   return h+`</div>`};
 
 const NAV={datos:'mas',menu:'menu',recetas:'recetas',compra:'compra',otras:'compra',mas:'mas',libro:'mas',cat:'mas',gastos:'mas',compartir:'mas'};
@@ -762,6 +777,9 @@ document.addEventListener('click',e=>{
   else if(a==='open'){openRow=openRow===id?null:id;altOpen=openRow&&item&&!okI(item)?id:null;render()}
   else if(a==='super'){superM=!superM;wake(superM);openRow=null;ordOpen=false;scrollTo(0,0);render()}
   else if(a==='trayT'){trayOpen=!trayOpen;render()}
+  else if(a==='proponer'){const prev=JSON.parse(JSON.stringify(S.menu)),n=proponer();save();render();status(n?`${n} plato${n>1?'s':''} propuesto${n>1?'s':''}. Toca uno para cambiarlo.`:'No me quedan ideas sin repetir.',n?()=>{S.menu=prev;save();render()}:null)}
+  else if(a==='otraidea'){const v=S.menu[k]||(S.menu[k]={});const old=v.plato;v.plato='';if(!proponer(k))v.plato=old;save();render()}
+  else if(a==='libF'){libF=t.dataset.f;render()}
   else if(a==='repetir'){const prev=S.menu;S.menu=JSON.parse(JSON.stringify(S.menuPrev||{}));for(const v of Object.values(S.menu))if(v)delete v.de;S.finde=!!S.findePrev;save();render();status('Menú de la semana pasada copiado.',()=>{S.menu=prev;save();render()})}
   else if(a==='cocina'){const c=comidas().find(x=>x.k===k),r=c&&elegidaDe(c);if(r){cook={t:r.nombre||c.plato,p:pasosDe(r),i:0,ing:(r.ingredientes||[]).map(g=>`${g.nombre}${g.cantidad?': '+g.cantidad+' '+(g.merc?'× '+(g.formato||''):(g.unidad||'')):''}`)};wake(true);rCook()}}
   else if(a==='cookn'){if(cook){cook.i++;rCook()}}
@@ -855,7 +873,7 @@ document.addEventListener('paste',e=>{const t=e.target;if(t.id!=='qAdd'||!e.clip
   if(/\n/.test(tx.trim())&&!parseM(tx)){e.preventDefault();t.value=tx.trim().split(/\s*\n\s*/).join(', ');qAdd=t.value;$('#sug').innerHTML=rSug()}});
 document.addEventListener('keydown',e=>{if(e.target.id==='qAdd'&&e.key==='Enter'){e.preventDefault();const b=document.querySelector('#sug [data-act=regm]')||document.querySelector('#sug [data-act=addvarias]')||document.querySelector('#sug .sgi')||document.querySelector('#sug [data-act=addgen]');if(b)b.click();return}
   const t=e.target.closest('[data-act=elige]');if(t&&(e.key==='Enter'||e.key===' ')){e.preventDefault();t.click()}});
-document.addEventListener('input',e=>{const t=e.target;
+document.addEventListener('input',e=>{const t=e.target;if(t.id==='libQ'){libQ=t.value;render();const n=$('#libQ');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length)}return}
   if(t.id==='catQ'){catQ=t.value;$('#catL').innerHTML=rCatList();return}
   if(t.id==='qAdd'){qAdd=t.value;$('#sug').innerHTML=rSug();return}
   if(t.dataset.pm){const x=parseM(t.value);if(x)pmTmp[t.dataset.pm]=x;else delete pmTmp[t.dataset.pm];const r=$('#pmr-'+t.dataset.pm);if(r)r.innerHTML=x?rPm(t.dataset.pm):(t.value.trim()?'<p class="note">No reconozco el producto. Copia también el formato y el precio (p. ej. «Bandeja 560 g aprox. … 2,24 € por unidad»).</p>':'');return}
