@@ -797,7 +797,9 @@ async function buzon(){if(!db)return;try{const ref=db.doc('app/importar'),v=val(
   if(v&&v.catalogo&&typeof v.catalogo==='object'){let n=0;for(const [k,x] of Object.entries(v.catalogo)){const p=num(x&&x.precio);if(p==null)continue;S.catalogo[String(k)]={precio:p,f:String(x.f||''),sec:SECC.includes(x.sec)?x.sec:'Otros'};n++}
     await ref.delete();if(n){save();render();status(n+' producto'+(n>1?'s':'')+' nuevos en el catálogo ✓')}}}catch(e){}}
 let diferido=false;
-function aplicaRemoto(v){S=Object.assign(blank(),JSON.parse(v.json));lastAt=v.at;arregla();
+function aplicaRemoto(v){const L=S,R=Object.assign(blank(),JSON.parse(v.json)),del=new Set(R.borr||[]);
+  for(const K of ['catalogo','vinculos','fotos','precios']){const m=Object.assign({},L[K]||{},R[K]||{});if(K==='catalogo')for(const k in m)if(del.has('c:'+k))delete m[k];R[K]=m}
+  S=R;lastAt=v.at;arregla();
   const ae=document.activeElement;if(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)&&$('#view').contains(ae)){if(!diferido){diferido=true;ae.addEventListener('blur',()=>{diferido=false;render()},{once:true})}rTicket()}else render();
   }
 function escucha(){try{const ref=db.doc('app/estado');if(typeof ref.onSnapshot!=='function')return;
