@@ -67,6 +67,7 @@ main h2{font-size:28px;margin-bottom:4px}
 #cook .run{background:var(--g);color:#fff;border-radius:12px;padding:10px 14px;font:700 22px 'Courier Prime',monospace;display:flex;justify-content:space-between;align-items:center;margin:8px 0}#cook .run button{border:0;background:none;color:#fff;font:600 14px Figtree,sans-serif;text-decoration:underline;cursor:pointer}
 #cook .nv{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:12px}#cook .nv .btn{min-height:60px;font-size:18px}
 .mopen{border-top:1px solid var(--line);padding-bottom:10px}
+#offl{position:fixed;top:calc(74px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:9;background:var(--ink);color:#fff;font:600 13px Figtree,sans-serif;padding:7px 14px;border-radius:20px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.2)}#offl[hidden]{display:none}
 .hoy{background:var(--g);color:#fff;border-radius:16px;padding:14px 16px;margin:10px 0 16px}.hoy .hk{font:400 15px Righteous,Outfit,sans-serif;letter-spacing:.05em;color:#dfe6c8;margin-bottom:4px}
 .hoy .hl{display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 0;border-top:1px solid rgba(255,255,255,.18)}.hoy .hk+.hl{border-top:0}.hoy .ml{font-size:13px;color:#dfe6c8;font-weight:600}.hoy b{font-weight:600}
 .hoy .mini{background:#fff;color:var(--g);border:0}
@@ -240,6 +241,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--g);pad
 <main id="view"></main>
 <div id="cta"></div>
 <div class="toast" id="status" role="status" aria-live="polite"></div>
+<div id="offl" role="status" aria-live="polite" hidden></div>
 
 <div id="login"><div class="lbox"><img src="rotulo.png" alt="Cabaç · Les comprete de les guape">
 <p class="note" id="lpaso">Entra con tu correo y tu contraseña.</p>
@@ -388,16 +390,22 @@ let S=blank(),tab='menu',db=null,sample=null,busy='',tSave=null,confirmCierre=fa
 try{const l=JSON.parse(localStorage.getItem('menuSora'));if(l)S=Object.assign(blank(),l)}catch(e){}
 
 let tTo=null,undoFn=null;function status(t,u){const e=$('#status');if(!e)return;undoFn=u||null;e.innerHTML=esc(t)+(u?'<button class="undo" data-undo>Deshacer</button>':'');e.classList.add('on');e.classList.toggle('act',!!u);clearTimeout(tTo);tTo=setTimeout(()=>{e.classList.remove('on','act');undoFn=null},u?6000:3500)}
+let sucio=false,fallo=false,tRetry=null,oyendo=false;try{sucio=localStorage.getItem('cabacSucio')==='1'}catch(e){}
+function setSucio(v){sucio=v;try{localStorage.setItem('cabacSucio',v?'1':'')}catch(e){}offl()}
+function offl(){const e=$('#offl');if(!e)return;const off=!navigator.onLine;e.hidden=!(off||(sucio&&fallo));e.textContent=off?'Sin conexión · lo guardo y lo subo al volver':'Reintentando guardar en la nube…'}
 function save(){
   {const Y=yo();if(Y)for(const L of [S.compra,S.otras])for(const i of L||[])if(i.por===undefined)i.por=Y}
   try{localStorage.setItem('menuSora',JSON.stringify(S))}catch(e){}
-  clearTimeout(tSave);pend=true;
-  tSave=setTimeout(async()=>{if(!db){pend=false;return}
-    try{const ref=db.doc('app/estado');
-      try{const r=val(await ref.get());if(r&&r.json&&r.at>lastAt)fusiona(JSON.parse(r.json))}catch(e){}
-      const at=Date.now();await ref.set({json:JSON.stringify(S),at});lastAt=at;pend=false}
-    catch(e){pend=false;status('No se pudo guardar en la nube; de momento queda en este navegador.')}},700);
+  setSucio(true);clearTimeout(tSave);pend=true;tSave=setTimeout(sube,700);
 }
+async function sube(){clearTimeout(tRetry);if(!db){pend=false;return}pend=true;
+  try{const ref=db.doc('app/estado');
+    try{const r=val(await ref.get());if(r&&r.json&&r.at>lastAt)fusiona(JSON.parse(r.json))}catch(e){}
+    const at=Date.now();await ref.set({json:JSON.stringify(S),at});lastAt=at;pend=false;fallo=false;setSucio(false);
+    if(!oyendo)escucha()}
+  catch(e){pend=false;fallo=true;offl();tRetry=setTimeout(()=>{if(sucio)sube()},navigator.onLine?10000:30000)}}
+window.addEventListener('online',()=>{offl();if(sucio)sube();else refrescar()});
+window.addEventListener('offline',offl);
 function comidas(){const out=[];for(let d=0;d<(S.finde?7:5);d++)for(const m of ['comida','cena']){const k=d+'-'+m,v=S.menu[k]||{};out.push({k,d,m,plato:(v.plato||'').trim(),fuera:!!v.fuera,tupper:!!v.tupper,extra:+v.extra||0})}return out}
 const cocina=c=>c.plato&&!c.fuera&&!c.tupper;
 function elegidaDe(c){const e=S.elegida[c.k];if(e===2)return S.libro.find(r=>r.id===S.mias[c.k])||null;const R=S.recetas[c.k];return R&&R.plato===c.plato&&e!=null?R.op[e]||null:null}
@@ -844,7 +852,7 @@ document.addEventListener('click',e=>{
   else if(a==='fin'){superM=false;wake(false);tab='gastos';scrollTo(0,0);render()}
   else if(a==='otraL'){otraL=k;render()}
   else if(a==='copiar'){const tx=textoLista();try{navigator.clipboard.writeText(tx).then(()=>status('Lista copiada. Pégala en WhatsApp.'),()=>status('No se pudo copiar.'))}catch(x){status('No se pudo copiar.')}}
-  else if(a==='addvarias'){const L=varias(qAdd);for(const x of L){const p=parseM(x);if(p){const kk=regCat(p);S.compra.push({id:uid(),ing:p.n,ok:true,producto:p.n,formato:p.f,envases:1,precio:p.p,estimado:false,seccion:p.sec,para:'',sobra:'',tengo:false,hecho:false,origen:'manual'})}else S.compra.push(aplicaV({id:uid(),ing:x,producto:x,formato:'',envases:1,precio:S.precios[pkey(x,'')]??null,estimado:false,seccion:guessSec(x),para:'',sobra:'',tengo:false,hecho:false,origen:'manual'}))}
+  else if(a==='addvarias'){const L=varias(qAdd);for(const x of L){const p=parseM(x);if(p){const kk=regCat(p);S.compra.push({id:uid(),ing:p.n,ok:true,producto:p.n,formato:p.f,envases:1,precio:p.p,estimado:false,seccion:p.sec,para:'',sobra:'',tengo:false,hecho:false,origen:'manual'})}else anadeTexto(x)}
     qAdd='';save();status(L.length+' cosas añadidas a la lista.');render()}
   else if(a==='fuera'){const v=S.menu[k]||(S.menu[k]={});v.fuera=!v.fuera;if(v.fuera)v.tupper=false;save();render()}
   else if(a==='tupper'){const v=S.menu[k]||(S.menu[k]={});v.tupper=!v.tupper;if(v.tupper)v.fuera=false;else if(v.de){delete v.de;if((v.plato||'').startsWith('Tupper: '))v.plato=''}save();render()}
@@ -945,7 +953,14 @@ document.addEventListener('submit',e=>{e.preventDefault();const f=e.target,p=(f.
   else if(f.dataset.lista){const pr=f.pr?num(f.pr.value):null,mem=S.precios['otras:'+p.toLowerCase()];S.otras.push({id:uid(),lista:f.dataset.lista,producto:p,cant:Math.max(1,+((f.n||{}).value)||1),precio:pr!=null?pr:(mem??null),hecho:false});if(pr!=null)S.precios['otras:'+p.toLowerCase()]=pr}
   save();render();});
 
-function entrante(){let p;try{p=new URLSearchParams(location.search)}catch(e){return}const t=[p.get('title'),p.get('text')].filter(Boolean).join(' ').trim();if(!t&&!p.get('url'))return;
+function generico(q){q=String(q).replace(/^(apunta|apuntar|añade|añadir|pon|compra|comprar)\s+/i,'').replace(/[.!¡¿?]+$/,'').trim();if(!q)return null;q=q.charAt(0).toUpperCase()+q.slice(1);
+  const c=busca(q,1,true)[0];if(c&&norm(c.n).split(/\s+/).length<=norm(q).split(/\s+/).length+4){return{id:uid(),ing:q,ok:true,producto:c.n,formato:c.f,envases:1,precio:c.p,estimado:false,seccion:c.sec,para:'',sobra:'',tengo:false,hecho:false,origen:'manual'}}
+  return aplicaV({id:uid(),ing:q,producto:q,formato:'',envases:1,precio:S.precios[pkey(q,'')]??null,estimado:false,seccion:guessSec(q),para:'',sobra:'',tengo:false,hecho:false,origen:'manual'})}
+function anadeTexto(t){const L=varias(t),hechos=[];for(const x of L){const it=generico(x);if(!it)continue;const ex=S.compra.find(i=>norm(i.producto)===norm(it.producto)&&!i.hecho);if(ex){if(ex.tengo)ex.tengo=false;hechos.push(ex.producto);continue}S.compra.push(it);hechos.push(it.producto)}return hechos}
+function entrante(){let p;try{p=new URLSearchParams(location.search)}catch(e){return}
+  if(p.get('add')!=null||p.get('voz')!=null){const a=p.get('add')||'';try{history.replaceState(null,'',location.pathname)}catch(e){}tab='compra';
+    if(a.trim()){const H=anadeTexto(a);save();render();status(H.length?'Apuntado: '+H.join(', ')+'.':'No he entendido qué apuntar.')}
+    else{render();setTimeout(()=>{const q=$('#qAdd');if(q)q.focus()},300)}return}const t=[p.get('title'),p.get('text')].filter(Boolean).join(' ').trim();if(!t&&!p.get('url'))return;
   const limpio=t.replace(/https?:\/\/\S+/g,'').replace(/\s*[|·–-]\s*Mercadona.*$/i,'').replace(/^[¡!¿\s]*(mira|echa un vistazo|te comparto|descubre|he encontrado)[^:!]*[:!]*\s*/i,'').replace(/^[\s:!¡.,-]+|[\s:!¡.,-]+$/g,'').replace(/\s+/g,' ').trim();
   const uu=p.get('url')||(t.match(/https?:\/\/\S+/)||[])[0]||'';let deUrl='';
   try{const mm=decodeURIComponent(uu).match(/mercadona\.es\/product\/\d+\/([a-z0-9-]+)/i);if(mm){deUrl=mm[1].replace(/-/g,' ').trim();deUrl=deUrl.charAt(0).toUpperCase()+deUrl.slice(1)}}catch(e){}
@@ -967,11 +982,11 @@ function aplicaRemoto(v){const L=S,R=Object.assign(blank(),JSON.parse(v.json)),d
   S=R;lastAt=v.at;arregla();detectaNuevos(true);
   const ae=document.activeElement;if(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)&&$('#view').contains(ae)){if(!diferido){diferido=true;ae.addEventListener('blur',()=>{diferido=false;render()},{once:true})}rTicket()}else render();
   }
-function escucha(){try{const ref=db.doc('app/estado');if(typeof ref.onSnapshot!=='function')return;
-  ref.onSnapshot(snap=>{const v=val(snap);if(v&&v.json&&v.at>lastAt&&!pend&&!busy)aplicaRemoto(v)},()=>{})}catch(e){}}
+function escucha(){try{const ref=db.doc('app/estado');if(typeof ref.onSnapshot!=='function')return;oyendo=true;
+  ref.onSnapshot(snap=>{const v=val(snap);if(v&&v.json&&v.at>lastAt&&!pend&&!sucio&&!busy)aplicaRemoto(v)},()=>{})}catch(e){}}
 setInterval(()=>{if(!document.hidden)refrescar()},20000);
-async function refrescar(){if(!db||pend||busy)return;try{const v=val(await db.doc('app/estado').get());
-  if(v&&v.json&&v.at>lastAt&&!pend)aplicaRemoto(v)}catch(e){}buzon()}
+async function refrescar(){if(!db||pend||busy)return;if(sucio){sube();return}try{const v=val(await db.doc('app/estado').get());
+  if(v&&v.json&&v.at>lastAt&&!pend&&!sucio)aplicaRemoto(v);if(!oyendo)escucha()}catch(e){}buzon()}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refrescar()});
 window.addEventListener('focus',refrescar);
 arregla();render();
@@ -983,8 +998,8 @@ if(C&&C.use){
     const timer=setTimeout(()=>status('La nube tarda en responder; se guarda en este navegador.'),10000);
     try{const snap=await db.doc('app/estado').get();clearTimeout(timer);
       const v=val(snap);
-      if(v&&v.json){S=Object.assign(blank(),JSON.parse(v.json));lastAt=v.at||0;arregla();detectaNuevos(true);render()}buzon();if(arregla())render();escucha();entrante()}
-    catch(e){clearTimeout(timer);status('No se pudo leer la nube; uso lo guardado en este navegador.')}}).catch(()=>{});
+      if(v&&v.json){if(sucio){lastAt=0;await sube();render()}else{S=Object.assign(blank(),JSON.parse(v.json));lastAt=v.at||0;arregla();detectaNuevos(true);render()}}buzon();if(arregla())render();if(!oyendo)escucha();entrante()}
+    catch(e){clearTimeout(timer);offl();entrante()}}).catch(()=>{});
 }
 }
 </script>
