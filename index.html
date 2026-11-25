@@ -210,10 +210,13 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--g);pad
 <div class="toast" id="status" role="status" aria-live="polite"></div>
 
 <div id="login"><div class="lbox"><img src="icon-192.png" alt=""><h1 class="wm">CABAÇ</h1>
-<p class="note" id="lpaso">Entra con tu correo. Te enviamos un código de 6 cifras.</p>
-<form id="lform" autocomplete="on"><input type="email" id="lmail" required placeholder="tu correo" autocomplete="email" aria-label="Correo">
-<input id="lcode" inputmode="numeric" autocomplete="one-time-code" placeholder="código del correo" aria-label="Código" style="display:none">
-<button class="btn" id="lbtn">Enviarme el código</button></form><p class="note" id="lmsg"></p></div></div>
+<p class="note" id="lpaso">Entra con tu correo y tu contraseña.</p>
+<form id="lform" autocomplete="on"><input type="email" id="lmail" required placeholder="tu correo" autocomplete="username" aria-label="Correo">
+<input type="password" id="lpass" required minlength="6" placeholder="contraseña" autocomplete="current-password" aria-label="Contraseña">
+<button class="btn" id="lbtn">Entrar</button></form>
+<button class="btn alt" id="lnew" type="button" style="width:100%;margin-top:8px">Primera vez: crear mi cuenta</button>
+<button class="back" id="lolv" type="button" style="margin-top:6px">He olvidado la contraseña</button>
+<p class="note" id="lmsg"></p></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 {
@@ -225,16 +228,23 @@ let ok;const sesion=new Promise(r=>ok=r);
 const H=document.documentElement;
 sb.auth.getSession().then(({data})=>{if(data.session)ok(data.session);else H.classList.add('nolog')});
 sb.auth.onAuthStateChange((ev,se)=>{if(se){H.classList.remove('nolog');ok(se)}else if(ev==='SIGNED_OUT')H.classList.add('nolog')});
-const f=document.getElementById('lform'),m=document.getElementById('lmail'),c=document.getElementById('lcode'),msg=document.getElementById('lmsg'),btn=document.getElementById('lbtn');
-let paso=1;
-f.addEventListener('submit',async e=>{e.preventDefault();e.stopPropagation();const em=m.value.trim().toLowerCase();
-  if(!CASA.includes(em)){msg.textContent='Ese correo no es de esta casa.';return}
-  btn.disabled=true;
-  if(paso===1){msg.textContent='Enviando…';const {error}=await sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname}});
-    btn.disabled=false;if(error){msg.textContent='No se pudo enviar: '+error.message;return}
-    paso=2;c.style.display='';c.focus();btn.textContent='Entrar';msg.textContent='Mira tu correo y escribe aquí el código (o abre el enlace).'}
-  else{const {error}=await sb.auth.verifyOtp({email:em,token:c.value.trim(),type:'email'});btn.disabled=false;if(error)msg.textContent='Código incorrecto o caducado. Pide otro recargando.'}
-},true);
+const f=document.getElementById('lform'),m=document.getElementById('lmail'),pw=document.getElementById('lpass'),msg=document.getElementById('lmsg'),btn=document.getElementById('lbtn');
+const em=()=>m.value.trim().toLowerCase();
+const okMail=()=>{if(!CASA.includes(em())){msg.textContent='Ese correo no es de esta casa.';return false}return true};
+const redir=location.origin+location.pathname;
+let modoNueva=false;
+f.addEventListener('submit',async e=>{e.preventDefault();e.stopPropagation();
+  if(modoNueva){const {error}=await sb.auth.updateUser({password:pw.value});msg.textContent=error?'No se pudo: '+error.message:'Contraseña cambiada ✓';if(!error){modoNueva=false;btn.textContent='Entrar';H.classList.remove('nolog')}return}
+  if(!okMail())return;btn.disabled=true;msg.textContent='Entrando…';
+  const {error}=await sb.auth.signInWithPassword({email:em(),password:pw.value});btn.disabled=false;
+  if(error)msg.textContent=/confirm/i.test(error.message)?'Primero confirma tu correo: abre el enlace que te enviamos.':'Correo o contraseña incorrectos.';else msg.textContent=''},true);
+document.getElementById('lnew').addEventListener('click',async()=>{if(!okMail())return;if(pw.value.length<6){msg.textContent='Escribe arriba la contraseña que quieras (mínimo 6 caracteres).';pw.focus();return}
+  msg.textContent='Creando tu cuenta…';const {data,error}=await sb.auth.signUp({email:em(),password:pw.value,options:{emailRedirectTo:redir}});
+  if(error){msg.textContent=/registered|exists/i.test(error.message)?'Ya tienes cuenta: pulsa Entrar.':'No se pudo crear: '+error.message;return}
+  msg.textContent=data.session?'':'Te hemos enviado un correo. Abre el enlace para confirmarlo y después vuelve aquí y pulsa Entrar.'});
+document.getElementById('lolv').addEventListener('click',async()=>{if(!okMail())return;const {error}=await sb.auth.resetPasswordForEmail(em(),{redirectTo:redir});
+  msg.textContent=error?'No se pudo enviar: '+error.message:'Te hemos enviado un enlace para poner una contraseña nueva.'});
+sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){modoNueva=true;setTimeout(()=>H.classList.add('nolog'),0);document.getElementById('lpaso').textContent='Escribe tu contraseña nueva y pulsa Guardar.';btn.textContent='Guardar contraseña';m.removeAttribute('required')}});
 const doc=id=>({
   async get(){const {data,error}=await sb.from('estado').select('doc').eq('id',id).maybeSingle();if(error)throw error;return {data:()=>data?data.doc:null}},
   async set(v){const {data:{session}}=await sb.auth.getSession();const {error}=await sb.from('estado').upsert({id,doc:v,at:(v&&v.at)||Date.now(),updated_by:session&&session.user.email});if(error)throw error},
