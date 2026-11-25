@@ -304,15 +304,45 @@ const pkey=(p,f)=>(p+' '+(f||'')).trim().toLowerCase();
 
 let pmTmp={};
 let recOpen=null,openRow=null,superM=false,otraL='mercado',trayOpen=false,ordOpen=false,mOpen=null,wl=null,nuevos=new Set(),cook=null,tmr=null;
-const PLATOS=[['Merluza al horno con calabacín','p'],['Salmón en la Cosori con espárragos','p',1],['Lubina al papillote con patata','p'],['Pescadilla al vapor con patata y zanahoria','p'],['Bacalao al horno con pimiento asado','p'],['Dorada a la sal con ensalada','p'],['Gallo a la plancha con arroz blanco','p'],['Rape con verduras al vapor','p'],
+const PLATOS0=[['Merluza al horno con calabacín','p'],['Salmón en la Cosori con espárragos','p',1],['Lubina al papillote con patata','p'],['Pescadilla al vapor con patata y zanahoria','p'],['Bacalao al horno con pimiento asado','p'],['Dorada a la sal con ensalada','p'],['Gallo a la plancha con arroz blanco','p'],['Rape con verduras al vapor','p'],
 ['Pechuga de pollo a la plancha con verduras','c'],['Pollo en la Cosori con boniato','c',1],['Pavo al limón con arroz blanco','c'],['Hamburguesa de pollo con ensalada','c',1],['Muslitos de pollo asados con patata','c',1],['Brochetas de pavo y calabacín','c',1],['Caldo de pollo con fideos finos','c'],['Solomillo de cerdo al horno con manzana','c'],
 ['Tortilla francesa con ensalada','h'],['Tortilla de calabacín','h'],['Revuelto de champiñones y gambas','h'],['Huevos a la plancha con judías verdes','h'],
 ['Crema de calabacín','v'],['Crema de calabaza y zanahoria','v'],['Judía verde y patata hervidas','v'],['Verduras asadas en la Cosori con queso fresco','v',1],['Arroz blanco con verduras salteadas','v'],['Ensalada templada de pasta y atún','v']].map(([n,t,c])=>({n,t,c:!!c}));
+const RB=`Merluza al horno con calabacín~p~~25~merluza en lomos:400:g|calabacín:1:ud|patata:300:g|limón:1:ud~Precalienta el horno a 200 ºC.|Corta la patata en rodajas finas, ponla en la bandeja con un chorrito de aceite y sal y hornéala 15 min.|Añade el calabacín en rodajas y la merluza encima, con sal y unas gotas de limón.|Hornea 12-15 min más, hasta que la merluza se separe en lascas.~Zona 1: patata a 180 ºC 15 min. Zona 2: merluza y calabacín a 180 ºC 10 min. Usa Sync para que acaben a la vez.
+Salmón en la Cosori con espárragos~p~1~15~salmón en lomos:300:g|espárragos verdes:250:g|limón:1:ud~Seca el salmón con papel y ponle sal.|Corta la parte dura de los espárragos y úntalos con muy poco aceite.|Pon el salmón y los espárragos en la cesta y cocina 10-12 min.|Sirve con unas gotas de limón.~Air Fry a 180 ºC 10-12 min, una sola zona (5 L).
+Lubina al papillote con patata~p~~30~lubina en filetes:300:g|patata:300:g|zanahoria:1:ud|limón:1:ud~Precalienta el horno a 200 ºC.|Corta la patata y la zanahoria muy finas y repártelas en dos hojas de papel de horno.|Pon la lubina encima con sal, limón y un hilo de aceite, y cierra bien los paquetes.|Hornea 20 min y abre los paquetes en la mesa.~
+Pescadilla al vapor con patata y zanahoria~p~~25~pescadilla:400:g|patata:300:g|zanahoria:2:ud~Pela y trocea la patata y la zanahoria.|Cuécelas al vapor, o en agua con sal, durante 15 min.|Añade la pescadilla a la vaporera los últimos 8 min.|Sirve con un hilo de aceite en crudo.~
+Bacalao al horno con patata y calabacín~p~~30~bacalao desalado:400:g|patata:400:g|calabacín:1:ud~Precalienta el horno a 200 ºC.|Hornea la patata en rodajas finas 15 min con un poco de aceite.|Añade el calabacín en medias lunas y el bacalao encima.|Hornea 12 min más.~Zona 1: patata a 190 ºC 15 min. Zona 2: bacalao y calabacín a 180 ºC 10 min, con Sync.
+Dorada al horno con ensalada~p~~30~dorada:2:ud|limón:1:ud|lechuga:1:ud|tomate:2:ud~Precalienta el horno a 200 ºC.|Pon las doradas limpias en la bandeja con sal, rodajas de limón y un hilo de aceite.|Hornea 20 min.|Mientras, prepara la ensalada de lechuga y tomate.~
+Gallo a la plancha con arroz blanco~p~~20~gallo en filetes:300:g|arroz:150:g|limón:1:ud~Cuece el arroz en agua con sal 18 min y escúrrelo.|Seca el gallo y ponle sal.|Hazlo a la plancha con muy poco aceite, 2-3 min por cada lado.|Sirve con el arroz y limón.~
+Rape con verduras al vapor~p~~25~rape:400:g|calabacín:1:ud|zanahoria:2:ud|judía verde:200:g~Trocea las verduras en bastones.|Cuécelas al vapor 12 min.|Añade el rape en trozos los últimos 8 min.|Aliña con aceite en crudo y sal.~
+Pechuga de pollo a la plancha con verduras~c~~20~pechuga de pollo fileteada:400:g|calabacín:1:ud|zanahoria:1:ud|champiñón:200:g~Corta las verduras en láminas finas.|Hazlas a la plancha con una gota de aceite y sal, 8 min.|Haz el pollo a la plancha 3-4 min por cada lado.|Sirve juntos.~Zona 1: verduras a 190 ºC 12 min. Zona 2: pollo a 190 ºC 10 min, con Sync.
+Pollo en la Cosori con boniato~c~1~30~contramuslo de pollo deshuesado:500:g|boniato:2:ud~Pela el boniato y córtalo en dados.|Úntalo con muy poco aceite y sal.|Pon sal y pimentón dulce al pollo.|Cocina en la Cosori y sirve.~Zona 1: boniato a 190 ºC 25 min. Zona 2: pollo a 190 ºC 18 min. Usa Sync para que acaben a la vez.
+Pavo al limón con arroz blanco~c~~20~pechuga de pavo fileteada:400:g|arroz:150:g|limón:2:ud~Cuece el arroz 18 min y escúrrelo.|Haz el pavo a la plancha 3 min por cada lado.|Añade el zumo de un limón a la sartén y deja 1 min.|Sirve con el arroz.~
+Hamburguesa de pollo con ensalada~c~1~15~hamburguesa de pollo:4:ud|lechuga:1:ud|tomate:2:ud~Pon las hamburguesas en la Cosori.|Dales la vuelta a mitad de tiempo.|Mientras, prepara la ensalada.~Air Fry a 180 ºC 10-12 min.
+Muslitos de pollo asados con patata~c~1~35~muslo de pollo:800:g|patata:400:g|limón:1:ud~Corta la patata en gajos con muy poco aceite y sal.|Pon sal, limón y hierbas a los muslos.|Cocina en la Cosori.~Zona 1: patata a 200 ºC 25 min. Zona 2: muslos a 190 ºC 25 min, dándoles la vuelta a mitad.
+Brochetas de pavo y calabacín~c~1~20~pechuga de pavo:400:g|calabacín:1:ud|tomate cherry:250:g~Corta el pavo y el calabacín en dados.|Monta las brochetas alternando pavo, calabacín y tomate.|Ponles sal y muy poco aceite.|Cocina en la Cosori, dándoles la vuelta a mitad.~Air Fry a 190 ºC 12 min, en las dos zonas como una de 10 L si no caben.
+Caldo de pollo con fideos finos~c~~25~caldo de pollo:1:ud|pechuga de pollo:200:g|fideos finos:100:g|zanahoria:1:ud~Calienta el caldo con la zanahoria en rodajas.|Añade el pollo en dados y cuece 10 min.|Echa los fideos y cuece 4 min más.~
+Solomillo de cerdo al horno con manzana~c~~35~solomillo de cerdo:500:g|manzana:2:ud|patata:300:g~Precalienta el horno a 200 ºC.|Pon la patata y la manzana en gajos en la bandeja con muy poco aceite.|Dora el solomillo con sal 1 min por cada lado y ponlo encima.|Hornea 20 min y déjalo reposar 5 min antes de cortar.~Zona 1: patata y manzana a 190 ºC 20 min. Zona 2: solomillo a 180 ºC 15 min, con Sync.
+Tortilla francesa con ensalada~h~~10~huevos:4:ud|lechuga:1:ud|tomate:2:ud|pepino:1:ud~Prepara la ensalada.|Bate dos huevos por tortilla con una pizca de sal.|Cuájala en una sartén con una gota de aceite, 1-2 min.~
+Tortilla de calabacín~h~~25~huevos:5:ud|calabacín:2:ud~Corta el calabacín en dados pequeños.|Hazlo en la sartén tapada con una gota de aceite y sal, 10 min, sin que se fría.|Bátelo con los huevos.|Cuaja la tortilla a fuego medio 3 min por cada lado.~
+Revuelto de champiñones y gambas~h~~15~huevos:4:ud|champiñón:250:g|gambas peladas:200:g~Lamina los champiñones y hazlos a la plancha 5 min.|Añade las gambas y deja 2 min.|Echa los huevos batidos y remueve a fuego suave hasta que cuajen.~
+Huevos a la plancha con judías verdes~h~~20~huevos:4:ud|judía verde:400:g|patata:200:g~Cuece las judías y la patata en agua con sal 15 min.|Haz los huevos a la plancha con una gota de aceite.|Sirve las verduras con aceite en crudo y los huevos encima.~
+Crema de calabacín~v~~30~calabacín:3:ud|patata:1:ud|queso fresco batido:100:g~Trocea el calabacín y la patata.|Cúbrelos de agua justa con sal y cuece 20 min.|Tritura con el queso fresco hasta que quede fina.~
+Crema de calabaza y zanahoria~v~~30~calabaza:600:g|zanahoria:2:ud|patata:1:ud~Pela y trocea todo.|Cubre de agua justa con sal y cuece 20 min.|Tritura y sirve con un hilo de aceite.~
+Judía verde y patata hervidas~v~~25~judía verde:400:g|patata:400:g~Pela y trocea la patata.|Cuece la patata y las judías en agua con sal 15-18 min.|Escurre y aliña con aceite en crudo.~
+Verduras asadas en la Cosori con queso fresco~v~1~25~calabacín:1:ud|berenjena:1:ud|zanahoria:2:ud|queso fresco:250:g~Corta las verduras en dados iguales.|Úntalas con muy poco aceite y sal.|Ásalas en la Cosori, removiendo a mitad.|Sirve con el queso fresco en dados.~Las dos zonas a 190 ºC 18 min, con Match.
+Arroz blanco con verduras salteadas~v~~25~arroz:150:g|calabacín:1:ud|zanahoria:1:ud|champiñón:200:g|huevos:2:ud~Cuece el arroz 18 min y escúrrelo.|Saltea las verduras en tiras con una gota de aceite, 8 min.|Haz una tortilla fina con los huevos y córtala en tiras.|Mézclalo todo con el arroz.~
+Ensalada templada de pasta y atún~v~~20~pasta:200:g|atún al natural:3:ud|tomate cherry:250:g|maíz dulce:1:ud|huevos:2:ud~Cuece la pasta según el paquete y los huevos 10 min.|Escurre la pasta y déjala templar.|Mézclala con el atún escurrido, el tomate en mitades, el maíz y el huevo picado.|Aliña con aceite y sal.~`.split('\n').map(l=>{const [n,t,c,mi,ing,pa,co]=l.split('~');return{n,t,c:!!c,r:{nombre:n,minutos:+mi,ingredientes:ing.split('|').map(x=>{const [nombre,cantidad,unidad]=x.split(':');return{nombre,cantidad:+cantidad,unidad}}),pasos:pa.split('|'),cosori:co||''}}});
+function recBase(n){return RB.find(x=>norm(x.n)===norm(n))}
+function pon(k,x){const v=S.menu[k]=S.menu[k]||{};v.plato=x.n;if(x.id){S.mias[k]=x.id;S.elegida[k]=2}else if(x.r){S.recetas[k]={plato:x.n,op:[x.r]};S.elegida[k]=0}}
+function asegura(){let ch=false;for(const c of comidas().filter(cocina)){if(elegidaDe(c))continue;const R=S.recetas[c.k];if(R&&R.plato===c.plato&&R.op&&R.op.length)continue;const b=recBase(c.plato);if(b){S.recetas[c.k]={plato:b.n,op:[b.r]};S.elegida[c.k]=0;ch=true}}if(ch)save()}
+const PLATOS=RB;
 function proponer(k0){const usad=new Set([...Object.values(S.menu),...Object.values(S.menuPrev||{})].map(v=>norm((v&&v.plato)||'')));
-  const pool=[...PLATOS,...S.libro.map(r=>({n:r.nombre,t:'m'}))].filter(x=>x.n&&!usad.has(norm(x.n)));
+  const pool=[...PLATOS,...S.libro.map(r=>({n:r.nombre,t:'m',id:r.id}))].filter(x=>x.n&&!usad.has(norm(x.n)));
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
   const ks=k0?[k0]:comidas().filter(c=>!c.plato&&!c.fuera&&!c.tupper).map(c=>c.k);let prevT='',n=0;
-  for(const k of ks){let ix=pool.findIndex(x=>x.t!==prevT);if(ix<0)ix=0;const x=pool.splice(ix,1)[0];if(!x)break;(S.menu[k]=S.menu[k]||{}).plato=x.n;prevT=x.t;n++}return n}
+  for(const k of ks){let ix=pool.findIndex(x=>x.t!==prevT);if(ix<0)ix=0;const x=pool.splice(ix,1)[0];if(!x)break;pon(k,x);prevT=x.t;n++}return n}
 function mediaSem(){const H=S.historial||[];return H.length>=2?H.reduce((a,x)=>a+x.total,0)/H.length:null}
 let libQ='',libF='';
 const yo=()=>window.CABAC_YO||(window.CABAC_SB?null:'S'),QUIEN={S:'Sora',M:'Mariate'};
@@ -658,6 +688,7 @@ ${sample?`${imgOK?`<label class="fl">Foto o captura del ticket<input type="file"
 
 const NAV={datos:'mas',menu:'menu',recetas:'recetas',compra:'compra',otras:'compra',mas:'mas',libro:'mas',cat:'mas',gastos:'mas',compartir:'mas'};
 function render(){
+  asegura();
   document.querySelectorAll('.bnav .tab').forEach(b=>b.setAttribute('aria-current',NAV[tab]===b.dataset.tab));
   $('#view').innerHTML=(MAS[tab]&&!ed?`<button class="back" data-tab="mas">‹ Más</button>`:'')+V[tab]();
   $('#cta').innerHTML=CTA[tab]?CTA[tab]():'';rTicket();autoLista();
@@ -699,8 +730,13 @@ async function hacerLista(){const prev=S.compra.filter(i=>i.origen==='auto'),kee
       else{const mem=S.precios[key];ex[key]={id:uid(),ing:String(g.nombre),producto:String(g.nombre),formato:String(g.formato||''),envases:n,precio:mem!=null?mem:num(g.precio),estimado:false,seccion:SECC.includes(g.seccion)?g.seccion:'Otros',para:dd,sobra:'',tengo:false,hecho:false,origen:'auto'}}}
     else{const q=num(g.cantidad);lines.push(`- ${g.nombre}: ${q!=null?Math.round(q*f*10)/10:g.cantidad} ${g.unidad} (${dd}: ${r.nombre}${c.extra?`, ${2+c.extra} raciones con tupper`:''})`)}}}
   const exact=Object.values(ex).map(aplicaV);
-  if(!lines.length||!sample){if(lines.length)status('Sin permiso para preguntar a Claude: solo he añadido los productos tal cual de Mercadona.');
-    S.compra=[...keep(exact),...S.compra.filter(i=>i.origen==='manual')];save();tab='compra';render();return}
+  if(!lines.length||!sample){const gen={},BAS=/^(sal|aceite|pimienta|agua|especias|piment[oó]n|vinagre|or[eé]gano|perejil seco|hierbas)\b/;
+    for(const {c,r} of sel){const f=(2+c.extra)/2,dd=`${DIAS[c.d].slice(0,3)} ${c.m}`;for(const g of (r.ingredientes||[])){if(!g.nombre||g.merc||BAS.test(norm(g.nombre)))continue;
+      const kk=norm(g.nombre),q=num(g.cantidad),u=['g','ml','ud'].includes(g.unidad)?g.unidad:null;
+      if(gen[kk]){gen[kk].para+=', '+dd;if(gen[kk].need&&q&&u===gen[kk].need.u)gen[kk].need.q+=q*f}
+      else gen[kk]={id:uid(),ing:String(g.nombre),producto:String(g.nombre),formato:q&&u?`${Math.round(q*f*10)/10} ${u}`:'',need:q&&u?{q:q*f,u}:null,envases:1,precio:null,estimado:true,seccion:guessSec(g.nombre),para:dd,sobra:'',tengo:false,hecho:false,origen:'auto'}}}
+    for(const x of Object.values(gen))if(x.need)x.formato=`${Math.round(x.need.q*10)/10} ${x.need.u}`;
+    S.compra=[...keep([...exact,...Object.values(gen).map(aplicaV)]),...S.compra.filter(i=>i.origen==='manual')];save();tab='compra';render();return}
   busy='Actualizando la lista con las recetas…';render();
   const p=`Convierte estos ingredientes (recetas de una semana para 2 personas) en la lista de la compra de Mercadona (España).
 - Une los repetidos y suma cantidades.
