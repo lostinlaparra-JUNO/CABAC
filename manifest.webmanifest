@@ -6,8 +6,8 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#faf6ec",
-  "theme_color": "#445628",
+  "background_color": "#f3f0e8",
+  "theme_color": "#fbfaf6",
   "share_target": {"action": "./", "method": "GET", "params": {"title": "title", "text": "text", "url": "url"}},
   "icons": [
     {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
