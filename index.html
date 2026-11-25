@@ -796,13 +796,17 @@ document.addEventListener('submit',e=>{e.preventDefault();const f=e.target,p=(f.
   save();render();});
 
 function entrante(){let p;try{p=new URLSearchParams(location.search)}catch(e){return}const t=[p.get('title'),p.get('text')].filter(Boolean).join(' ').trim();if(!t&&!p.get('url'))return;
-  const limpio=t.replace(/https?:\/\/\S+/g,'').replace(/\s*[|·–-]\s*Mercadona.*$/i,'').replace(/^Mira (este producto|esto)[^:]*:\s*/i,'').replace(/\s+/g,' ').trim();
-  try{history.replaceState(null,'',location.pathname)}catch(e){}if(!limpio)return;
-  let x=null;const ti=(p.get('title')||'').replace(/\s*[|·–-]\s*Mercadona.*$/i,'').trim();
-  if(ti){const tx=(p.get('text')||'').replace(/https?:\/\/\S+/g,' ');const y=parseM('x '+tx),pp=tx.match(/(\d+(?:[.,]\d+)?)\s*€\s*(?:\/\s*)?(?:por\s*)?(?:unidad|ud\.?|pack)?/i);x={n:ti,f:y?y.f:'',p:y&&y.p!=null?y.p:(pp?num(pp[1]):null),sec:guessSec(ti)};if(!y&&x.p==null){const z=parseM(limpio);if(z&&z.n.length>=ti.length-2)x=z}}else x=parseM(limpio);
+  const limpio=t.replace(/https?:\/\/\S+/g,'').replace(/\s*[|·–-]\s*Mercadona.*$/i,'').replace(/^[¡!¿\s]*(mira|echa un vistazo|te comparto|descubre|he encontrado)[^:!]*[:!]*\s*/i,'').replace(/^[\s:!¡.,-]+|[\s:!¡.,-]+$/g,'').replace(/\s+/g,' ').trim();
+  const uu=p.get('url')||(t.match(/https?:\/\/\S+/)||[])[0]||'';let deUrl='';
+  try{const mm=decodeURIComponent(uu).match(/mercadona\.es\/product\/\d+\/([a-z0-9-]+)/i);if(mm){deUrl=mm[1].replace(/-/g,' ').trim();deUrl=deUrl.charAt(0).toUpperCase()+deUrl.slice(1)}}catch(e){}
+  try{history.replaceState(null,'',location.pathname)}catch(e){}
+  if(!limpio&&!deUrl)return;
+  if(!limpio||/^(mira|echa un vistazo|te comparto|descubre)/i.test(limpio)&&deUrl)p.set('title',deUrl);
+  const limpio2=limpio||deUrl;let x=null;const ti=(p.get('title')||'').replace(/\s*[|·–-]\s*Mercadona.*$/i,'').trim();
+  if(ti){const tx=(p.get('text')||'').replace(/https?:\/\/\S+/g,' ');const y=parseM('x '+tx),pp=tx.match(/(\d+(?:[.,]\d+)?)\s*€\s*(?:\/\s*)?(?:por\s*)?(?:unidad|ud\.?|pack)?/i);x={n:ti,f:y?y.f:'',p:y&&y.p!=null?y.p:(pp?num(pp[1]):null),sec:guessSec(ti)};if(!y&&x.p==null){const z=parseM(limpio2);if(z&&z.n.length>=ti.length-2)x=z}}else x=parseM(limpio2);
   if(x){regCat(x);S.compra.push({id:uid(),ing:x.n,ok:true,producto:x.n,formato:x.f,envases:1,precio:x.p,estimado:false,seccion:x.sec,para:'',sobra:'',tengo:false,hecho:false,origen:'manual'})}
-  else S.compra.push(aplicaV({id:uid(),ing:limpio,producto:limpio,formato:'',envases:1,precio:S.precios[pkey(limpio,'')]??null,estimado:false,seccion:guessSec(limpio),para:'',sobra:'',tengo:false,hecho:false,origen:'manual'}));
-  tab='compra';save();render();status('«'+(x?x.n:limpio)+'» añadido a la lista.')}
+  else S.compra.push(aplicaV({id:uid(),ing:limpio2,producto:limpio2,formato:'',envases:1,precio:S.precios[pkey(limpio2,'')]??null,estimado:false,seccion:guessSec(limpio2),para:'',sobra:'',tengo:false,hecho:false,origen:'manual'}));
+  tab='compra';save();render();status('«'+(x?x.n:limpio2)+'» añadido a la lista.')}
 async function buzon(){if(!db)return;try{const ref=db.doc('app/importar'),v=val(await ref.get());
   if(v&&v.menu&&typeof v.menu==='object'){for(const [k,x] of Object.entries(v.menu))if(/^\d-(comida|cena)$/.test(k)&&x&&typeof x==='object')S.menu[k]=Object.assign(S.menu[k]||{},{plato:String(x.plato??(S.menu[k]||{}).plato??''),fuera:!!x.fuera,tupper:!!x.tupper});if(!v.catalogo){await ref.delete();save();render()}}
   if(v&&v.catalogo&&typeof v.catalogo==='object'){let n=0;for(const [k,x] of Object.entries(v.catalogo)){const p=num(x&&x.precio);if(p==null)continue;S.catalogo[String(k)]={precio:p,f:String(x.f||''),sec:SECC.includes(x.sec)?x.sec:'Otros'};n++}
