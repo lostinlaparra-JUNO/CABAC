@@ -35,7 +35,7 @@ h1,h2,h3{font-family:Outfit,system-ui,sans-serif;line-height:1.1;margin:0;text-w
 .wm{font:400 27px/1 Righteous,Outfit,sans-serif;letter-spacing:.06em;color:var(--g);text-shadow:1.5px 1.5px 0 var(--band),3px 3px 0 var(--esp)}.wkl{display:block;font-size:13px;color:var(--mute);margin-top:3px}
 
 .totp{border:1px solid var(--line);background:var(--card);color:var(--or);font:700 18px 'Courier Prime',monospace;border-radius:10px;padding:6px 12px;min-height:44px;cursor:pointer;text-align:right;line-height:1.1}
-.totp small{display:block;font:600 11px Figtree,sans-serif;color:#666}
+.totp small{display:block;font:600 12px Figtree,sans-serif;color:var(--mute)}
 .bnav{position:fixed;left:0;right:0;bottom:0;z-index:8;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
 .tab{border:0;background:none;color:var(--mute);font:600 13px Figtree,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:60px;cursor:pointer;padding:6px 2px}
 .tab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -56,9 +56,9 @@ main h2{font-size:28px;margin-bottom:4px}
 .supbar{position:sticky;top:66px;z-index:5;background:var(--bg);padding:10px 0 12px;font-size:18px}.supbar .pbr{height:8px;border-radius:4px;background:var(--line);margin-top:8px;overflow:hidden}.supbar .pbr i{display:block;height:100%;background:var(--g);transition:width .3s}
 .mline{display:grid;grid-template-columns:64px minmax(0,1fr) auto 14px;gap:10px;align-items:center;width:100%;border:0;border-top:1px solid var(--line);background:none;padding:12px 0;text-align:left;font:16px/1.3 Figtree,sans-serif;color:var(--ink);cursor:pointer;min-height:48px}.day h3+.mline{border-top:0}
 .mline .ml{font-size:13px;color:var(--mute);font-weight:600}.mline .mp{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mline .mp.vac{color:var(--mute)}.mline .chev{color:var(--mute);font-size:20px}
-.tag{font-size:12px;font-weight:600;color:var(--g);background:var(--soft);border-radius:20px;padding:3px 9px;white-space:nowrap}
+.tag{font-size:13px;font-weight:600;color:var(--g);background:var(--soft);border-radius:20px;padding:3px 9px;white-space:nowrap}
 .lds{margin:10px 0 2px}.lds .lt{font-size:13px;font-weight:600;color:var(--mute);display:block;margin-bottom:6px}.lds .chips{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.lds .chips button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:7px 12px;font:600 14px Figtree,sans-serif;cursor:pointer;white-space:nowrap;min-height:38px}.lds .chips button::before{content:'+ ';color:var(--g)}
-.por{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--esp);color:#fff;font-size:11px;font-weight:700;margin-left:6px;vertical-align:1px}
+.por{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--g);color:#fff;font-size:11px;font-weight:700;margin-left:6px;vertical-align:1px}
 .it2.nuevo{background:var(--soft);box-shadow:inset 4px 0 var(--esp);padding-left:10px}
 #cook{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top)) max(5vw,18px) max(18px,env(safe-area-inset-bottom))}
 #cook .ch{display:flex;align-items:center;gap:10px}#cook .ch b{flex:1;font:400 20px Righteous,Outfit,sans-serif;color:var(--g)}#cook .x{border:1px solid var(--line);background:var(--card);border-radius:12px;min-width:48px;min-height:48px;font-size:20px;cursor:pointer}
@@ -67,6 +67,11 @@ main h2{font-size:28px;margin-bottom:4px}
 #cook .run{background:var(--g);color:#fff;border-radius:12px;padding:10px 14px;font:700 22px 'Courier Prime',monospace;display:flex;justify-content:space-between;align-items:center;margin:8px 0}#cook .run button{border:0;background:none;color:#fff;font:600 14px Figtree,sans-serif;text-decoration:underline;cursor:pointer}
 #cook .nv{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:12px}#cook .nv .btn{min-height:60px;font-size:18px}
 .mopen{border-top:1px solid var(--line);padding-bottom:10px}
+.hoy{background:var(--g);color:#fff;border-radius:16px;padding:14px 16px;margin:10px 0 16px}.hoy .hk{font:400 15px Righteous,Outfit,sans-serif;letter-spacing:.05em;color:#dfe6c8;margin-bottom:4px}
+.hoy .hl{display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 0;border-top:1px solid rgba(255,255,255,.18)}.hoy .hk+.hl{border-top:0}.hoy .ml{font-size:13px;color:#dfe6c8;font-weight:600}.hoy b{font-weight:600}
+.hoy .mini{background:#fff;color:var(--g);border:0}
+.day.past{opacity:.55}.day.today{border:2px solid var(--g)}
+.nw{background:var(--soft);border-radius:16px;padding:14px 16px;margin:10px 0 16px}.nw b{display:block;font-size:17px}.nw span{display:block;color:var(--mute);font-size:14px;margin:2px 0 10px}.nw .row{gap:8px}
 .ctx{font-size:14px;color:var(--mute);margin:8px 0 0}.ctx b{color:var(--ink)}.ctx .up{color:var(--warnink)}.ctx .dn{color:var(--g)}
 .fil{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px}.fil button{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:6px 12px;font:600 14px Figtree,sans-serif;cursor:pointer;min-height:38px;color:var(--ink)}.fil button[aria-pressed=true]{background:var(--g);color:#fff;border-color:var(--g)}.mopen .meal2{border-top:0}
 
@@ -89,9 +94,9 @@ main h2{font-size:28px;margin-bottom:4px}
 .pbar{height:10px;border-radius:5px;background:var(--soft);overflow:hidden;flex:1}.pbar i{display:block;height:100%;background:var(--g);border-radius:5px}
 .prog2{display:flex;align-items:center;gap:12px;margin:8px 0 6px;font-weight:600;font-size:14px}
 .rc.done{border-color:var(--g)}
-.chosen{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px;background:var(--soft);border-radius:10px;padding:10px 12px}
-.chosen b{flex:1 1 180px}.chosen .k{font-size:12px;font-weight:700;color:var(--or)}
-.it2{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.chosen{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}
+.chosen b{flex:1 1 180px}.chosen .k{font-size:13px;font-weight:700;color:var(--or)}
+.it2{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .it2 input[type=checkbox]{width:26px;height:26px;min-height:0;accent-color:var(--g)}
 .itb{display:flex;align-items:center;gap:10px;text-align:left;border:0;background:none;color:var(--ink);font:inherit;padding:4px 0;cursor:pointer;min-height:44px}
 .itb .nm{display:block;font-weight:600;line-height:1.25}.itb .fm{display:block;font-size:13px;color:var(--mute)}
@@ -168,7 +173,7 @@ a.mini{display:inline-flex;align-items:center;text-decoration:none}
 .sug{border:1px solid var(--line);border-radius:12px;margin-top:6px;background:var(--card);overflow:hidden}
 .sgi{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);padding:10px 12px;font:15px Figtree,sans-serif;cursor:pointer;min-height:56px}
 .sgi:hover,.sgi:focus-visible{background:var(--soft)}
-.sgh{font-size:12px;font-weight:700;color:var(--mute);padding:8px 12px 2px}.sgplus{font-weight:700;color:var(--g);white-space:nowrap;font-size:14px}
+.sgh{font-size:13px;font-weight:700;color:var(--mute);padding:8px 12px 2px}.sgplus{font-weight:700;color:var(--g);white-space:nowrap;font-size:14px}
 .sgm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px}
 label.mini{display:inline-flex;align-items:center}
 .pmb{margin:10px 0 4px}.pmb input{border-style:dashed}.pmb .sgi{border:1px solid var(--g);border-radius:10px;margin-top:6px}
@@ -177,7 +182,7 @@ label.mini{display:inline-flex;align-items:center}
 .rc{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px;background:var(--card)}
 .rc h3{font-size:20px}.rc .when{font-size:14px;color:var(--mute);font-weight:600}
 .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
-.op{border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:var(--bg)}
+.op{border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:var(--bg)}
 .op.sel{border-color:var(--g);background:var(--soft)}
 .op .k{font-size:13px;font-weight:600;color:var(--or)}
 .op h4{margin:2px 0 4px;font:600 17px Outfit,sans-serif}
@@ -194,7 +199,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--g);pad
 .qty button.qx{color:var(--or);font-weight:700}
 .qty button{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:18px;cursor:pointer}
 .pr{width:96px;text-align:right}.pr input{text-align:right;padding:8px}
-.est{font-size:12px;color:var(--mute);text-align:right;white-space:nowrap}
+.est{font-size:13px;color:var(--mute);text-align:right;white-space:nowrap}
 .acts{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
 .add{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) 90px 80px auto;gap:8px;margin-top:14px;align-items:end}
 .add2{display:grid;grid-template-columns:minmax(0,2fr) 80px 96px auto;gap:8px;margin-top:10px}
@@ -343,6 +348,12 @@ function proponer(k0){const usad=new Set([...Object.values(S.menu),...Object.val
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
   const ks=k0?[k0]:comidas().filter(c=>!c.plato&&!c.fuera&&!c.tupper).map(c=>c.k);let prevT='',n=0;
   for(const k of ks){let ix=pool.findIndex(x=>x.t!==prevT);if(ix<0)ix=0;const x=pool.splice(ix,1)[0];if(!x)break;pon(k,x);prevT=x.t;n++}return n}
+function hoyIdx(){const d=new Date();d.setHours(12,0,0,0);return Math.round((d-new Date(S.semana+'T12:00'))/864e5)}
+let nwNo=false;
+function rNueva(){const L=lunesDe(null,0);if(nwNo||!(L>S.semana))return'';return`<div class="nw"><b>Ya es la semana del ${esc(fSem(L))}</b><span>¿Cerramos la del ${esc(fSem(S.semana))}? Se guarda lo gastado y empezáis menú y lista nuevos (lo de cada semana y lo que quedaba poco entran solos).</span><div class="row"><button class="btn" data-act="cerrar">Cerrar semana</button><button class="btn alt" data-act="nwno">Ahora no</button></div></div>`}
+function rHoy(){const d=hoyIdx();if(d<0||d>(S.finde?6:4))return'';const cs=['comida','cena'].map(m=>comidas().find(c=>c.k===d+'-'+m)).filter(Boolean);
+  return`<div class="hoy"><div class="hk">HOY · ${esc(DIAS[d].toUpperCase())}</div>${cs.map(c=>{const t=c.fuera?'Comemos fuera':c.tupper?(c.plato?'Tupper: '+c.plato:'Tupper'):(c.plato||'Sin decidir');const r=cocina(c)&&elegidaDe(c);
+  return`<div class="hl"><span class="ml">${c.m==='comida'?'Comida':'Cena'}</span><b>${esc(t)}</b>${r?`<button class="mini" data-act="cocina" data-k="${c.k}">Cocinar ▶</button>`:'<span></span>'}</div>`}).join('')}</div>`}
 function mediaSem(){const H=S.historial||[];return H.length>=2?H.reduce((a,x)=>a+x.total,0)/H.length:null}
 let libQ='',libF='';
 const yo=()=>window.CABAC_YO||(window.CABAC_SB?null:'S'),QUIEN={S:'Sora',M:'Mariate'};
@@ -439,7 +450,7 @@ function rTray(){const P=S.compra.filter(i=>!i.tengo&&!okI(i));if(!P.length)retu
 function rTrayB(){let P=S.compra.filter(i=>!i.tengo&&!okI(i));
   if(!P.length)return'';
   P=[...P.filter(i=>!trSkip.includes(i.id)),...P.filter(i=>trSkip.includes(i.id))];const i=P[0],A=alternativas(i).slice(0,4);
-  return`<div class="tray"><div class="row between"><h3>Elige producto</h3><span class="note">${P.length} pendiente${P.length>1?'s':''}</span></div>
+  return`<div class="tray"><div class="row between"><h3>Elige producto</h3><button class="mini" data-act="dejartodo">Vale así para todos</button></div>
 <div class="tc"><div class="tch"><b>${esc(i.ing||i.producto)}</b><span class="fm">${esc(i.para)}${i.need?' · necesitas '+esc(fq(i.need)):''}</span></div>
 ${A.length?`<div class="opts4">${A.map(c=>{const cv=cubre(i,c);return`<div class="optc"><button data-act="pick" data-id="${i.id}" data-c="${esc(c.k)}">${foto(c.k)}<span class="o1">${esc(c.n)}</span><span class="fm">${esc(c.f)}</span><span class="pz">${eur(c.p*cv.env)}${cv.env>1?` <small>(${cv.env} × ${eur(c.p)})</small>`:''}</span>${cv.txt?`<span class="fm">${esc(cv.txt)}</span>`:''}</button><a href="${esc(mLink(c.n))}">Ver foto</a></div>`}).join('')}</div>`:`<p class="note">Aún no hay nada parecido en tu catálogo. Búscalo en Mercadona, copia la ficha y pégala aquí:</p>`}
 <div class="pmb"><input data-pm="${i.id}" placeholder="Pega aquí el producto copiado de Mercadona" aria-label="Pegar producto de Mercadona para ${esc(i.ing||i.producto)}"><div id="pmr-${i.id}">${rPm(i.id)}</div></div>
@@ -498,7 +509,7 @@ function rTicket(){
   const tk=$('#ticket');if(!tk)return;
   tk.innerHTML=`<h3>${S.real?'TICKET':'TICKET ESTIMADO'}</h3><div class="sub">semana del ${esc(fSem(S.semana))} · 2 personas</div>
   <div class="tl"><span>Mercadona <small>${S.real?'(ticket real)':`(${S.compra.filter(i=>!i.tengo).length} art.)`}</small></span><b>${eur(T.m)}</b></div>${S.real?`<div class="tl"><small>estimado era ${eur(T.est)}</small></div>`:''}
-  ${OTRAS.map(L=>`<div class="tl"><span>${L.n}</span><span>${eur(T.o[L.k])}</span></div>`).join('')}
+  ${OTRAS.filter(L=>T.o[L.k]>0).map(L=>`<div class="tl"><span>${L.n}</span><span>${eur(T.o[L.k])}</span></div>`).join('')}
   <div class="tl tt"><span>TOTAL</span><span>${eur(T.t)}</span></div>
   ${T.sin?`<div class="tl"><small>${T.sin} artículo${T.sin>1?'s':''} sin precio todavía</small></div>`:''}`;
 }
@@ -520,8 +531,8 @@ function rMealL(d,m){const k=d+'-'+m,v=S.menu[k]||{},modo=v.fuera?'fuera':v.tupp
   const c=comidas().find(x=>x.k===k),txt=modo==='fuera'?'Comemos fuera':(v.plato||'');
   const tg=modo==='tupper'?'<span class="tag">Tupper</span>':modo==='cocina'&&c&&c.extra?`<span class="tag">+${c.extra} tupper</span>`:'<span></span>';
   return`<button class="mline" data-act="mopen" data-k="${k}"><span class="ml">${m==='comida'?'Comida':'Cena'}</span><span class="mp ${txt&&modo!=='fuera'?'':'vac'}">${esc(txt||'Añadir plato')}</span>${tg}<span class="chev">›</span></button>`}
-V.menu=()=>`<h2>La semana</h2>${comidas().some(c=>!c.plato&&!c.fuera&&!c.tupper)?`<button class="btn alt full" style="margin:8px 0 14px" data-act="proponer">✨ Proponer platos ligeros para los huecos</button>`:''}${S.menuPrev&&!Object.values(S.menu).some(v=>v&&(v.plato||v.fuera||v.tupper))?`<button class="btn alt full" style="margin:8px 0 14px" data-act="repetir">↻ Repetir el menú de la semana pasada</button>`:''}
-${Array.from({length:S.finde?7:5},(_,d)=>`<section class="day"><h3>${DIAS[d]}</h3>${rMealL(d,'comida')}${rMealL(d,'cena')}</section>`).join('')}
+V.menu=()=>`<h2>La semana</h2>${rNueva()}${rHoy()}${comidas().some(c=>!c.plato&&!c.fuera&&!c.tupper)?`<button class="btn alt full" style="margin:8px 0 14px" data-act="proponer">✨ Proponer platos ligeros para los huecos</button>`:''}${S.menuPrev&&!Object.values(S.menu).some(v=>v&&(v.plato||v.fuera||v.tupper))?`<button class="btn alt full" style="margin:8px 0 14px" data-act="repetir">↻ Repetir el menú de la semana pasada</button>`:''}
+${Array.from({length:S.finde?7:5},(_,d)=>`<section class="day ${d<hoyIdx()?'past':d===hoyIdx()?'today':''}"><h3>${DIAS[d]}${d===hoyIdx()?' · hoy':''}</h3>${rMealL(d,'comida')}${rMealL(d,'cena')}</section>`).join('')}
 <button class="btn alt full" data-act="finde">${S.finde?'Quitar sábado y domingo':'Añadir sábado y domingo'}</button>`;
 CTA.menu=()=>{const n=comidas().filter(cocina).length;return n?`<button class="btn" data-tab="recetas">Elegir recetas (${n} plato${n>1?'s':''}) →</button>`:''};
 
@@ -584,9 +595,9 @@ function rCatList(){const q=norm(catQ),C=catItems().filter(c=>!q||norm(c.k).incl
     return`<div class="sec">${esc(sec)}</div>`+g.map(c=>`<div class="altc"><div class="row" style="flex-wrap:nowrap">${foto(c.k)}<div><div class="nm">${esc(c.n)}</div><div class="fm">${esc(c.f)} · ${eur(c.p)}</div></div></div>
 <div class="acts">${fotoBtn(c.k)}<a class="mini" href="${esc(mLink(c.n))}">Ver en Mercadona</a><button class="mini on" data-act="cadd" data-c="${esc(c.k)}">A la lista</button><button class="mini" data-act="cdel" data-c="${esc(c.k)}">Quitar</button></div></div>`).join('')}).join('')}
 V.cat=()=>`<h2>Mi catálogo de Mercadona</h2>
-<p class="lead">Los productos que ya tienes fichados, con formato y precio. Se usan al hacer la lista, en <b>Cambiar producto</b> y en Mis recetas. ${Object.keys(S.catalogo).length} productos ahora.</p>
+<p class="lead">${Object.keys(S.catalogo).length} productos con formato y precio.</p>
 <div class="box"><h3>Añadir desde la web de Mercadona</h3>
-<p class="note" style="margin-top:4px">En la web o la app de Mercadona, copia el nombre, formato y precio de uno o varios productos (vale copiar todo el texto de una búsqueda, una categoría o tu carro) y pégalo aquí.</p>
+<p class="note" style="margin-top:4px">Copia en la web o app de Mercadona uno o varios productos, o tu carro entero, y pégalo aquí.</p>
 <textarea id="impTxt" rows="5" aria-label="Texto copiado de Mercadona" placeholder="Lubina limpia&#10;Bandeja 400 g aprox.&#10;5,20 € /ud."></textarea>
 <div class="row" style="margin-top:10px"><button class="btn" data-act="importar" ${busy?'disabled':''}>Añadir al catálogo</button><span class="prog">${esc(busy||impMsg)}</span></div>
 <details style="margin-top:10px"><summary>Añadir uno a mano</summary><form class="add" id="addC"><input name="p" placeholder="Producto (Lubina limpia)" required><input name="f" placeholder="Formato (bandeja 400 g)"><input name="pr" inputmode="decimal" placeholder="€" required><select name="s">${SECC.map(x=>`<option>${x}</option>`).join('')}</select><button class="btn">Añadir</button></form></details></div>
@@ -609,17 +620,16 @@ Responde SOLO con un array JSON válido: [{"producto":"","formato":"","precio":0
   catch(e){errIA(e);impMsg='No he podido leer el texto.'}
   busy='';render()}
 
-const segC=()=>{const T=totales(),o=Object.values(T.o).reduce((a,b)=>a+b,0);return`<div class="seg2"><button data-tab="compra" aria-pressed="${tab==='compra'}">Mercadona · ${eur(T.m)}</button><button data-tab="otras" aria-pressed="${tab==='otras'}">Otras tiendas · ${eur(o)}</button></div>`};
+const segC=()=>{const T=totales(),o=Object.values(T.o).reduce((a,b)=>a+b,0);return`<div class="seg2"><button data-tab="compra" aria-pressed="${tab==='compra'}">Mercadona</button><button data-tab="otras" aria-pressed="${tab==='otras'}">Otras tiendas${S.otras.length?' · '+S.otras.length:''}</button></div>`};
 const ICASA='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>';
 function rRow(i){const sel=openRow===i.id,fij=S.fijos&&S.fijos[ckey(i)];
   return`<div data-sw="${i.id}" class="it2 ${nuevos.has(i.id)?'nuevo':''} ${i.hecho?'done':''} ${i.tengo?'tengo':''} ${superM?'':okI(i)?'okk':'pend'}"><input type="checkbox" data-act="hecho" data-id="${i.id}" ${i.hecho?'checked':''} aria-label="En el carro: ${esc(i.producto)}">
 <button class="itb" data-act="open" data-id="${i.id}" aria-expanded="${sel}">${foto(ckey(i))}<span><span class="nm">${esc(i.producto)}${i.por&&yo()&&i.por!==yo()?`<span class="por" title="Lo añadió ${QUIEN[i.por]||''}">${esc(i.por)}</span>`:''}</span><span class="fm">${esc(i.formato)}${!superM&&i.precio!=null?' · '+(i.estimado?'≈':'')+eur((+i.envases||0)*(+i.precio||0)):''}${i.tengo?' · lo tenéis':''}${fij&&!superM?' · cada semana':''}</span></span></button>
-${superM?`<b class="num">×${esc(i.envases)}</b>`:`<div class="qty">${(+i.envases||1)<=1?`<button data-act="borra" data-id="${i.id}" aria-label="Quitar ${esc(i.producto)} de la lista" class="qx">✕</button>`:`<button data-act="menos" data-id="${i.id}" aria-label="Menos">−</button>`}<b>${esc(i.envases)}</b><button data-act="mas" data-id="${i.id}" aria-label="Más">+</button></div>
-<button class="casa ${i.tengo?'on':''}" data-act="tengo2" data-id="${i.id}" aria-pressed="${!!i.tengo}" aria-label="${i.tengo?'Volver a comprar':'Lo tenemos'} ${esc(i.producto)}">${ICASA}<span>${i.tengo?'Comprar':'Tenemos'}</span></button>`}</div>
+${superM?`<b class="num">×${esc(i.envases)}</b>`:`<div class="qty">${(+i.envases||1)<=1?`<button data-act="borra" data-id="${i.id}" aria-label="Quitar ${esc(i.producto)} de la lista" class="qx">✕</button>`:`<button data-act="menos" data-id="${i.id}" aria-label="Menos">−</button>`}<b>${esc(i.envases)}</b><button data-act="mas" data-id="${i.id}" aria-label="Más">+</button></div>`}</div>
 ${sel&&!superM?`<div class="itd">${i.para?`<p class="note" style="margin:0 0 8px">Para: ${esc(i.para)}</p>`:''}<div class="prl" style="margin-bottom:8px">Sección <select data-sec="${i.id}" style="width:auto;flex:1">${SECC.map(x=>`<option ${i.seccion===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="prl">Precio por envase <input inputmode="decimal" data-precio="${i.id}" value="${i.precio!=null?String(i.precio).replace('.',','):''}" placeholder="€" aria-label="Precio por envase"></div>
 ${i.sobra?`<p class="note">Sobra: ${esc(i.sobra)}</p>`:''}
-<div class="acts"><button class="mini" data-act="poco" data-id="${i.id}">Queda poco: para la próxima semana</button><button class="mini ${fij?'on':''}" data-act="fijo" data-id="${i.id}">${fij?'Comprar cada semana ✓':'Comprar cada semana'}</button><button class="mini" data-act="alt" data-id="${i.id}">Cambiar producto</button>${okI(i)&&S.catalogo[ckey(i)]?fotoBtn(ckey(i)):''}<a class="mini" href="${esc(mLink(i.producto))}">Ver en Mercadona</a><button class="mini" data-act="borra" data-id="${i.id}">Quitar</button></div>${altOpen===i.id?rAlt(i):''}</div>`:''}`}
-function rProx(){const P=S.proxima||[];return`<section class="prox"><h3>Para la próxima semana</h3><p class="note" style="margin:2px 0 8px">¿Se está acabando algo? Apúntalo aquí y entrará solo en la lista de la semana que viene.</p>
+<div class="acts"><button class="mini" data-act="poco" data-id="${i.id}">Queda poco: para la próxima semana</button><button class="mini ${fij?'on':''}" data-act="fijo" data-id="${i.id}">${fij?'Comprar cada semana ✓':'Comprar cada semana'}</button><button class="mini" data-act="alt" data-id="${i.id}">Cambiar producto</button>${okI(i)&&S.catalogo[ckey(i)]?fotoBtn(ckey(i)):''}<a class="mini" href="${esc(mLink(i.producto))}">Ver en Mercadona</a><button class="mini" data-act="tengo2" data-id="${i.id}">${i.tengo?'Volver a comprar':'Lo tenemos'}</button><button class="mini" data-act="borra" data-id="${i.id}">Quitar</button></div>${altOpen===i.id?rAlt(i):''}</div>`:''}`}
+function rProx(){const P=S.proxima||[];return`<section class="prox"><h3>Para la próxima semana</h3><p class="note" style="margin:2px 0 8px">Lo que se acaba entra solo en la lista de la semana que viene.</p>
 <form class="add2" id="addP" style="grid-template-columns:minmax(0,1fr) auto"><input name="p" placeholder="Queda poco de…" aria-label="Producto que queda poco" required><button class="btn">Apuntar</button></form>
 ${P.length?`<div class="chips" style="margin-top:10px">${P.map(x=>`<button data-act="pdel" data-id="${x.id}" aria-label="Quitar ${esc(x.producto)}">${esc(x.producto)} ✕</button>`).join('')}</div>`:''}
 ${Object.keys(S.fijos||{}).length?`<p class="note" style="margin-top:8px">Cada semana entra solo: ${esc(Object.values(S.fijos).map(x=>x.producto).join(', '))}.</p>`:''}</section>`}
@@ -629,7 +639,7 @@ V.compra=()=>{const it=S.compra;
     return`<div class="row between"><h2>En el súper</h2><button class="mini" data-act="super">Salir</button></div><div class="supbar" aria-live="polite">${fal.length?`Faltan <b>${fal.length}</b> de ${tot}`:'<b>¡Todo en el carro!</b>'}<div class="pbr"><i style="width:${pc}%"></i></div></div>
 <div class="sup">${secs().map(s=>{const g=fal.filter(i=>i.seccion===s);return g.length?`<div class="sec">${esc(s)}</div>${g.map(rRow).join('')}`:''}).join('')}
 ${car.length?`<div class="sec">En el carro (${car.length})</div>${car.map(rRow).join('')}`:''}</div>`}
-  const md=mediaSem(),TT=totales().t;let h=`${segC()}${md&&TT?`<p class="ctx">Esta semana <b>≈ ${eur(TT)}</b> · ${Math.abs(TT-md)<1?'como vuestra media':`<span class="${TT>md?'up':'dn'}">${eur(Math.abs(TT-md))} ${TT>md?'más':'menos'}</span> que vuestra media (${eur(md)})`}</p>`:''}<div class="row between"><h2>Mercadona</h2>${it.length?`<button class="mini ${ordOpen?'on':''}" data-act="ordT">Pasillos</button>`:''}</div>${ordOpen?`<div class="box" style="margin:10px 0"><h3>Orden de los pasillos</h3><p class="note" style="margin:2px 0 8px">Ponlos en el orden en que recorréis el súper.</p>${secs().map((x,n,A)=>`<div class="ordr"><span>${esc(x)}</span><button data-act="secmv" data-d="-1" data-s="${esc(x)}" ${n?'':'disabled'} aria-label="Subir ${esc(x)}">↑</button><button data-act="secmv" data-d="1" data-s="${esc(x)}" ${n<A.length-1?'':'disabled'} aria-label="Bajar ${esc(x)}">↓</button></div>`).join('')}<button class="btn full" data-act="ordT">Listo</button></div>`:''}
+  const md=mediaSem(),TT=totales().t;let h=`${rNueva()}${segC()}${md&&TT?`<p class="ctx">Esta semana <b>≈ ${eur(TT)}</b> · ${Math.abs(TT-md)<1?'como vuestra media':`<span class="${TT>md?'up':'dn'}">${eur(Math.abs(TT-md))} ${TT>md?'más':'menos'}</span> que vuestra media (${eur(md)})`}</p>`:''}<div class="row between"><h2>Mercadona</h2>${it.length?`<button class="mini ${ordOpen?'on':''}" data-act="ordT">Pasillos</button>`:''}</div>${ordOpen?`<div class="box" style="margin:10px 0"><h3>Orden de los pasillos</h3><p class="note" style="margin:2px 0 8px">Ponlos en el orden en que recorréis el súper.</p>${secs().map((x,n,A)=>`<div class="ordr"><span>${esc(x)}</span><button data-act="secmv" data-d="-1" data-s="${esc(x)}" ${n?'':'disabled'} aria-label="Subir ${esc(x)}">↑</button><button data-act="secmv" data-d="1" data-s="${esc(x)}" ${n<A.length-1?'':'disabled'} aria-label="Bajar ${esc(x)}">↓</button></div>`).join('')}<button class="btn full" data-act="ordT">Listo</button></div>`:''}
 <div class="sbox"><input type="search" id="qAdd" value="${esc(qAdd)}" placeholder="Añadir: escribe o pega de Mercadona…" autocomplete="off" aria-label="Añadir a la lista"><div id="sug">${rSug()}</div></div>${!qAdd.trim()?(()=>{const L=siempre();return L.length?`<div class="lds"><span class="lt">Lo de siempre</span><div class="chips">${L.map(c=>`<button data-act="cadd" data-c="${esc(c.k)}" aria-label="Añadir ${esc(c.n)}">${esc(corto(c.n))}</button>`).join('')}</div></div>`:''})():''}
 ${busy?`<p class="prog">${esc(busy)}</p>`:''}${rTray()}`;
   if(!it.length)h+=`<div class="empty">La lista está vacía. Cuando elijas recetas, la lista se hará sola. También puedes añadir cosas con el buscador.</div>`;
@@ -642,7 +652,7 @@ CTA.compra=()=>{const it=S.compra;if(!it.length)return'';if(superM){const fal=it
 V.otras=()=>{const g=S.otras.filter(i=>i.lista===otraL),T=totales(),L=OTRAS.find(x=>x.k===otraL);
   return`${segC()}<h2>Otras tiendas</h2>
 <div class="chips">${OTRAS.map(x=>`<button data-act="otraL" data-k="${x.k}" aria-pressed="${otraL===x.k}">${x.n}${S.otras.some(i=>i.lista===x.k)?` · ${S.otras.filter(i=>i.lista===x.k).length}`:''}</button>`).join('')}</div>
-<form class="add2" data-lista="${otraL}"><input name="p" placeholder="Añadir a ${esc(L.n)}…" required aria-label="Producto para ${esc(L.n)}"><input name="n" type="number" min="1" value="1" aria-label="Unidades"><input name="pr" inputmode="decimal" placeholder="€/ud" aria-label="Precio"><button class="btn">+</button></form>
+<form class="add2" data-lista="${otraL}" style="grid-template-columns:minmax(0,1fr) auto"><input name="p" placeholder="Añadir en ${esc(L.n.toLowerCase())}…" required aria-label="Producto para ${esc(L.n)}"><button class="btn">Añadir</button></form>
 ${g.length?g.map(i=>`<div class="it2 ${i.hecho?'done':''}" style="grid-template-columns:30px minmax(0,1fr) 96px auto"><input type="checkbox" data-act="ohecho" data-id="${i.id}" ${i.hecho?'checked':''} aria-label="Comprado: ${esc(i.producto)}">
 <div><span class="nm" style="font-weight:600">${esc(i.producto)}</span><span class="fm" style="display:block;font-size:13px;color:var(--mute)">${esc(i.cant)} ud</span></div>
 <input inputmode="decimal" data-oprecio="${i.id}" value="${i.precio!=null?String(i.precio).replace('.',','):''}" placeholder="€" aria-label="Precio de ${esc(i.producto)}" style="text-align:right"><button class="mini" data-act="oborra" data-id="${i.id}" aria-label="Quitar ${esc(i.producto)}">✕</button></div>`).join(''):`<div class="empty" style="margin-top:14px">Nada apuntado en ${esc(L.n)}. Total: ${eur(T.o[otraL])}</div>`}
@@ -653,8 +663,7 @@ V.mas=()=>`<h2>Más</h2><div class="mlist" style="margin-top:14px">
 <button class="mbtn" data-tab="cat"><span>Catálogo de Mercadona<small>${Object.keys(S.catalogo).length} productos con precio</small></span></button>
 <button class="mbtn" data-tab="gastos"><span>Ticket y gastos<small>Leer el ticket, cerrar la semana, historial</small></span></button>
 <button class="mbtn" data-tab="compartir"><span>Compartir con Mariate<small>Usarla las dos, o mandar la lista por WhatsApp</small></span></button>
-<button class="mbtn" data-tab="datos"><span>Copia de seguridad<small>Exportar o importar todos los datos</small></span></button>
-<button class="mbtn" data-act="finde"><span>${S.finde?'Quitar sábado y domingo':'Añadir sábado y domingo'}<small>Días del menú</small></span></button></div>`;
+<button class="mbtn" data-tab="datos"><span>Copia de seguridad<small>Exportar o importar todos los datos</small></span></button></div>`;
 let impConf=false,impTxtM='';
 V.datos=()=>`<h2>Copia de seguridad</h2>
 <div class="box" style="margin-top:14px"><h3>Exportar</h3><p class="note" style="margin-top:4px">Copia todos los datos (menú, listas, catálogo, recetas, gastos) para guardarlos o pasarlos a otra versión de Cabaç.</p>
@@ -662,6 +671,7 @@ V.datos=()=>`<h2>Copia de seguridad</h2>
 <div class="box" style="margin-top:14px"><h3>Importar</h3><p class="note" style="margin-top:4px">Pega aquí los datos copiados. <b>Sustituyen a los de ahora.</b></p>
 <textarea id="impJSON" rows="4" aria-label="Datos para importar" placeholder="Pega aquí los datos">${esc(impTxtM)}</textarea>
 <div class="row" style="margin-top:10px">${impConf?`<span>¿Sustituir todos los datos actuales?</span><button class="btn or" data-act="importarJSON">Sí, importar</button><button class="btn alt" data-act="impNo">Cancelar</button>`:`<button class="btn" data-act="impPre">Importar</button>`}</div></div>`;
+const APPURL='https://lostinlaparra-juno.github.io/CABAC/';
 V.compartir=()=>`<h2>Compartir con Mariate</h2>
 <div class="box" style="margin-top:14px"><h3>Usarla las dos</h3>
 <p>Mariate solo tiene que abrir esta misma dirección en su móvil y entrar con <b>su correo</b>: le llega un código y listo. Lo que toque una le aparece a la otra al momento.</p>
@@ -734,7 +744,7 @@ async function hacerLista(){const prev=S.compra.filter(i=>i.origen==='auto'),kee
     for(const {c,r} of sel){const f=(2+c.extra)/2,dd=`${DIAS[c.d].slice(0,3)} ${c.m}`;for(const g of (r.ingredientes||[])){if(!g.nombre||g.merc||BAS.test(norm(g.nombre)))continue;
       const kk=norm(g.nombre),q=num(g.cantidad),u=['g','ml','ud'].includes(g.unidad)?g.unidad:null;
       if(gen[kk]){gen[kk].para+=', '+dd;if(gen[kk].need&&q&&u===gen[kk].need.u)gen[kk].need.q+=q*f}
-      else gen[kk]={id:uid(),ing:String(g.nombre),producto:String(g.nombre),formato:q&&u?`${Math.round(q*f*10)/10} ${u}`:'',need:q&&u?{q:q*f,u}:null,envases:1,precio:null,estimado:true,seccion:guessSec(g.nombre),para:dd,sobra:'',tengo:false,hecho:false,origen:'auto'}}}
+      else gen[kk]={id:uid(),ing:String(g.nombre),producto:String(g.nombre),formato:q&&u?`${Math.round(q*f*10)/10} ${u}`:'',need:q&&u?{q:q*f,u}:null,envases:1,precio:null,estimado:true,seccion:guessSec(g.nombre),para:dd,sobra:'',tengo:false,hecho:false,origen:'auto'};if(gen[kk].seccion==='Fruta y verdura')gen[kk].ok=true}}
     for(const x of Object.values(gen))if(x.need)x.formato=`${Math.round(x.need.q*10)/10} ${x.need.u}`;
     S.compra=[...keep([...exact,...Object.values(gen).map(aplicaV)]),...S.compra.filter(i=>i.origen==='manual')];save();tab='compra';render();return}
   busy='Actualizando la lista con las recetas…';render();
@@ -813,6 +823,10 @@ document.addEventListener('click',e=>{
   else if(a==='open'){openRow=openRow===id?null:id;altOpen=openRow&&item&&!okI(item)?id:null;render()}
   else if(a==='super'){superM=!superM;wake(superM);openRow=null;ordOpen=false;scrollTo(0,0);render()}
   else if(a==='trayT'){trayOpen=!trayOpen;render()}
+  else if(a==='nwno'){nwNo=true;render()}
+  else if(a==='dejartodo'){const P=S.compra.filter(i=>!i.tengo&&!okI(i));P.forEach(i=>i.ok=true);trayOpen=false;save();render();status(P.length+' productos dados por buenos.',()=>{P.forEach(i=>delete i.ok);save();render()})}
+  else if(a==='copiaurl'){try{navigator.clipboard.writeText(APPURL).then(()=>status('Enlace copiado.'))}catch(x){status(APPURL)}}
+  else if(a==='mandaurl'){const tx='Nuestra app del menú y la compra: '+APPURL;if(navigator.share)navigator.share({title:'Cabaç',text:tx}).catch(()=>{});else location.href='https://wa.me/?text='+encodeURIComponent(tx)}
   else if(a==='proponer'){const prev=JSON.parse(JSON.stringify(S.menu)),n=proponer();save();render();status(n?`${n} plato${n>1?'s':''} propuesto${n>1?'s':''}. Toca uno para cambiarlo.`:'No me quedan ideas sin repetir.',n?()=>{S.menu=prev;save();render()}:null)}
   else if(a==='otraidea'){const v=S.menu[k]||(S.menu[k]={});const old=v.plato;v.plato='';if(!proponer(k))v.plato=old;save();render()}
   else if(a==='libF'){libF=t.dataset.f;render()}
@@ -928,7 +942,7 @@ document.addEventListener('submit',e=>{e.preventDefault();const f=e.target,p=(f.
   if(f.id==='addP'){S.proxima=S.proxima||[];S.proxima.push({id:uid(),producto:p,formato:'',precio:S.precios[pkey(p,'')]??null,seccion:guessSec(p)})}
   else if(f.id==='addC'){const pr=num(f.pr.value);if(pr==null){status('Pon el precio.');return}S.catalogo[p+(f.f.value.trim()?', '+f.f.value.trim():'')]={precio:pr,f:new Date().toISOString().slice(0,10),sec:f.s.value};impMsg='Añadido «'+p+'».'}
   else if(f.id==='addM'){const pr=num(f.pr.value),mem=S.precios[pkey(p,'')];S.compra.push({id:uid(),producto:p,formato:'',envases:Math.max(1,+f.n.value||1),precio:pr!=null?pr:(mem??null),estimado:false,seccion:f.s.value,para:'',sobra:'',tengo:false,hecho:false,origen:'manual'});if(pr!=null)S.precios[pkey(p,'')]=pr}
-  else if(f.dataset.lista){const pr=num(f.pr.value),mem=S.precios['otras:'+p.toLowerCase()];S.otras.push({id:uid(),lista:f.dataset.lista,producto:p,cant:Math.max(1,+f.n.value||1),precio:pr!=null?pr:(mem??null),hecho:false});if(pr!=null)S.precios['otras:'+p.toLowerCase()]=pr}
+  else if(f.dataset.lista){const pr=f.pr?num(f.pr.value):null,mem=S.precios['otras:'+p.toLowerCase()];S.otras.push({id:uid(),lista:f.dataset.lista,producto:p,cant:Math.max(1,+((f.n||{}).value)||1),precio:pr!=null?pr:(mem??null),hecho:false});if(pr!=null)S.precios['otras:'+p.toLowerCase()]=pr}
   save();render();});
 
 function entrante(){let p;try{p=new URLSearchParams(location.search)}catch(e){return}const t=[p.get('title'),p.get('text')].filter(Boolean).join(' ').trim();if(!t&&!p.get('url'))return;
