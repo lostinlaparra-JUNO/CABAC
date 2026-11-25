@@ -1,0 +1,35 @@
+name: Despertador de la nube
+
+# Da un toque a la base de datos de Supabase cada 3 días para que el
+# plan gratuito no pause el proyecto por inactividad.
+on:
+  schedule:
+    - cron: "17 9 */3 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  toque:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar la base de datos
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://jxswqiirvlyggrdidqnc.supabase.co/rest/v1/estado?select=id&limit=1" \
+            -H "apikey: sb_publishable_RMCr9fE9RPxsAfsw6eqhQg_M6G3BiNs")
+          echo "Supabase respondió $code"
+          test "$code" = "200"
+
+      # GitHub apaga las tareas programadas de un repositorio público tras
+      # 60 días sin actividad; un pequeño latido en una rama aparte lo evita.
+      - name: Latido para que GitHub no apague el despertador
+        run: |
+          git init -q latido && cd latido
+          git config user.name "Despertador de Cabaç"
+          git config user.email "noreply@github.com"
+          date -u +%FT%TZ > ultimo-toque.txt
+          git add ultimo-toque.txt
+          git commit -q -m "Latido $(date -u +%F)"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:latido
