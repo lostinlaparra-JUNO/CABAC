@@ -358,7 +358,7 @@ const SINON={hamburguesa:['burger'],hamburguesas:['burger'],burguer:['burger'],b
   lechuga:['lechuga','canonigo','ensalada','cogollo'],ensalada:['lechuga','canonigo','cogollo']};
 const STOP=new Set(['de','del','la','el','las','los','con','y','en','al','a','para','sin','un','una','por']);
 function busca(q,max=6){const w=norm(q).split(/[^a-z0-9ñ]+/).filter(x=>x.length>1&&!STOP.has(x));if(!w.length)return[];
-  const alts=w.map(x=>[x.replace(/(es|s)$/,'').length>2?x.replace(/(es|s)$/,''):x,...(SINON[x]||[])]);
+  const alts=w.map(x=>{const st=x.replace(/(es|s)$/,'').length>2?x.replace(/(es|s)$/,''):x,o=[st,...(SINON[x]||[])];if(x.length>=4)for(const k in SINON)if(k.startsWith(x))o.push(...SINON[k]);return o});
   return catItems().map(c=>{const t=norm(c.k);let sc=0;for(const a of alts)if(a.some(v=>t.includes(v)))sc++;return{c,sc,full:sc===w.length}})
     .filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc||a.c.n.length-b.c.n.length).slice(0,max).map(x=>x.c)}
 function varias(t){return String(t).split(/[\n,;]+|\s+y\s+/).map(x=>x.replace(/^[\s\-•*·\d.)\[\]x]+/,'').trim()).filter(x=>x.length>1)}
