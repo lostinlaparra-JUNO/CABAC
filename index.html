@@ -305,7 +305,7 @@ function rMia(r,sel,k){return`<div class="op ${sel?'sel':''}" data-act="elige" d
 const norm=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const mLink=q=>'https://tienda.mercadona.es/search-results?query='+encodeURIComponent(q);
 function catItems(){return Object.entries(S.catalogo||{}).map(([k,v])=>{const i=k.lastIndexOf(', ');return{k,n:i>0?k.slice(0,i):k,f:i>0?k.slice(i+2):'',p:v.precio,sec:v.sec||'Otros'}})}
-function alternativas(it){return busca(it.ing||it.producto,8)}
+function alternativas(it){return busca(it.ing||it.producto,8,true)}
 function conv(v,u){u=u.replace(/s$/,'');if(u==='kg'||u==='kilo')return{q:v*1000,u:'g'};if(u==='g'||u==='gramo')return{q:v,u:'g'};if(u==='l'||u==='litro')return{q:v*1000,u:'ml'};return{q:v,u:'ml'}}
 function tam(f){const t=norm(f).replace(/(\d),(\d)/g,'$1.$2');let m=t.match(/(\d+)\s*x\s*(\d+(?:\.\d+)?)\s*(kg|g|ml|l)\b/);if(m)return conv(+m[1]*+m[2],m[3]);
   m=t.match(/(\d+(?:\.\d+)?)\s*(kilos?|kg|gramos|g|ml|litros?|l)\b/);if(m)return conv(+m[1],m[2]);
@@ -357,18 +357,19 @@ const SINON={hamburguesa:['burger'],hamburguesas:['burger'],burguer:['burger'],b
   fiambre:['pavo','jamon','fuet'],embutido:['fuet','jamon','chorizo','salchichon'],fruta:['mandarina','platano','kaki','mango','arandano','frambuesa','limon'],
   lechuga:['lechuga','canonigo','ensalada','cogollo'],ensalada:['lechuga','canonigo','cogollo']};
 const STOP=new Set(['de','del','la','el','las','los','con','y','en','al','a','para','sin','un','una','por']);
-function busca(q,max=6){const w=norm(q).split(/[^a-z0-9ñ]+/).filter(x=>x.length>1&&!STOP.has(x));if(!w.length)return[];
+function busca(q,max=6,todas=false){const w=norm(q).split(/[^a-z0-9ñ]+/).filter(x=>x.length>1&&!STOP.has(x));if(!w.length)return[];
   const alts=w.map(x=>{const st=x.replace(/(es|s)$/,'').length>2?x.replace(/(es|s)$/,''):x,o=[st,...(SINON[x]||[])];if(x.length>=4)for(const k in SINON)if(k.startsWith(x))o.push(...SINON[k]);return o});
   return catItems().map(c=>{const t=norm(c.k);let sc=0;for(const a of alts)if(a.some(v=>t.includes(v)))sc++;return{c,sc,full:sc===w.length}})
-    .filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc||a.c.n.length-b.c.n.length).slice(0,max).map(x=>x.c)}
+    .filter(x=>todas?x.full:x.sc>0).sort((a,b)=>b.sc-a.sc||a.c.n.length-b.c.n.length).slice(0,max).map(x=>x.c)}
 function varias(t){return String(t).split(/[\n,;]+|\s+y\s+/).map(x=>x.replace(/^[\s\-•*·\d.)\[\]x]+/,'').trim()).filter(x=>x.length>1)}
 function rSug(){const q=norm(qAdd).trim();if(!q)return'';const px=parseM(qAdd);
   if(!px&&/[\n,;]/.test(qAdd)){const L=varias(qAdd);if(L.length>1)return`<div class="sug"><button class="sgi" data-act="addvarias"><span><b>Añadir ${L.length} cosas</b><br><span class="fm">${esc(L.slice(0,6).join(' · '))}${L.length>6?'…':''}</span></span></button></div>`}
   if(px)return`<div class="sug"><button class="sgi" data-act="regm"><span><b>Añadir de Mercadona: ${esc(px.n)}</b><br><span class="fm">${esc(px.f)} · ${px.p!=null?eur(px.p):'sin precio'} · ${esc(px.sec)}</span></span></button></div>`;
   const w=q.split(/\s+/);
-  const M=busca(qAdd),Q=esc(qAdd.trim());
-  return`<div class="sug">${M.length?`<div class="sgh">En tus productos</div>`+M.map(c=>`<button class="sgi" data-act="cadd" data-c="${esc(c.k)}">${foto(c.k)}<span style="flex:1"><b>${esc(c.n)}</b><br><span class="fm">${esc(c.f)} · ${eur(c.p)}</span></span><span class="sgplus">+ Añadir</span></button>`).join(''):''}
-<button class="sgi" data-act="addgen"><span style="flex:1"><b>Añadir «${Q}»</b><br><span class="fm">${M.length?'Como producto nuevo, sin concretar':'No está en tus productos: se añade y luego eliges el concreto'}</span></span><span class="sgplus">+ Añadir</span></button>
+  const F=busca(qAdd,6,true),P=busca(qAdd,8).filter(c=>!F.some(f=>f.k===c.k)).slice(0,Math.max(0,5-F.length)),Q=esc(qAdd.trim());
+  const fila=c=>`<button class="sgi" data-act="cadd" data-c="${esc(c.k)}">${foto(c.k)}<span style="flex:1"><b>${esc(c.n)}</b><br><span class="fm">${esc(c.f)} · ${eur(c.p)}</span></span><span class="sgplus">+ Añadir</span></button>`;
+  const nuevo=`<button class="sgi" data-act="addgen"><span style="flex:1"><b>Añadir «${Q}»</b><br><span class="fm">${F.length?'Como producto nuevo, sin concretar':'No está en tus productos: se añade tal cual'}</span></span><span class="sgplus">+ Añadir</span></button>`;
+  return`<div class="sug">${F.length?`<div class="sgh">En tus productos</div>${F.map(fila).join('')}${nuevo}`:`${nuevo}`}${P.length?`<div class="sgh">Parecidos (no es lo mismo)</div>${P.map(fila).join('')}`:''}
 <div class="sgm"><a class="mini" href="${esc(mLink(qAdd.trim()))}">Buscarlo en Mercadona</a><button class="mini" data-act="addprox">Para la próxima semana</button>
 <span class="fm" style="flex-basis:100%">En Mercadona, copia el producto (nombre, formato y precio) o pulsa Compartir › Cabaç, y se añade con su precio.</span></div></div>`}
 function rAlt(i){const A=alternativas(i);return`<div class="alt"><div class="row" style="justify-content:space-between"><b>Elige el producto</b><button class="mini" data-act="alt" data-id="${i.id}">Cerrar</button></div>
