@@ -144,6 +144,8 @@ a.mini{display:inline-flex;align-items:center;text-decoration:none}
 .sug{border:1px solid var(--line);border-radius:12px;margin-top:6px;background:var(--card);overflow:hidden}
 .sgi{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);padding:10px 12px;font:15px Figtree,sans-serif;cursor:pointer;min-height:56px}
 .sgi:hover,.sgi:focus-visible{background:var(--soft)}
+.sgh{font-size:12px;font-weight:700;color:var(--mute);padding:8px 12px 2px}.sgplus{font-weight:700;color:var(--g);white-space:nowrap;font-size:14px}
+.sgm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px}
 label.mini{display:inline-flex;align-items:center}
 .pmb{margin:10px 0 4px}.pmb input{border-style:dashed}.pmb .sgi{border:1px solid var(--g);border-radius:10px;margin-top:6px}
 .tx{margin-top:12px;font-size:15px;border-top:1px dashed var(--line);padding-top:10px}
@@ -319,12 +321,13 @@ const foto=k=>S.fotos&&S.fotos[k]?`<img class="th" src="${esc(fotoSrc(S.fotos[k]
 const fotoBtn=k=>assets?`<label class="mini">${S.fotos&&S.fotos[k]?'Cambiar foto':'Tu foto'}<input type="file" accept="image/*" capture="environment" data-foto="${esc(k)}" hidden></label>`:'';
 function aplicaV(it){const k=S.vinculos[norm(it.ing||it.producto)],c=k&&catItems().find(x=>x.k===k);
   if(c){const cv=cubre(it,c);Object.assign(it,{producto:c.n,formato:c.f,precio:c.p,estimado:false,seccion:c.sec,ok:true});if(it.need)it.envases=cv.env}return it}
-const SECW=[['Limpieza y hogar',/bolsas? (de )?basura|bolsas? zip|papel (de )?aluminio|film|estropajo|lavavajillas|detergente|suavizante|lejia|friegasuelos|limpiador|bayeta|papel de cocina|servilletas|papel higienico/],['Higiene y cuidado personal',/champu|gel |desodorante|pasta de dientes|cepillo|compresa|crema|colonia|maquinillas?|toallitas/],['Cacao, café e infusiones',/cafe|te |infusion|manzanilla|cacao|colacao/],['Aperitivos',/pipas|patatas fritas|frutos secos|almendras|cacahuete|aceitunas|snack|nachos/],['Congelados',/ultracongelad|congelad/],['Pescado y marisco',/lubina|merluza|salmon|dorada|emperador|bacalao|gamba|langostino|sepia|calamar|atun fresco|pescado/],['Charcutería y quesos',/queso|jamon|lonchas|fiambre|chorizo|pavo.*lonch|mortadela/],['Carne',/pollo|pavo|conejo|ternera|cerdo|cordero|hamburguesa|lomo|solomillo|carne/],['Fruta y verdura',/calabaza|calabacin|tomate|lechuga|pepino|puerro|cebolla|patata|zanahoria|pimiento|berenjena|esparrago|brocoli|coliflor|espinaca|champi|seta|manzana|platano|naranja|limon|pera|fresa|uva|aguacate|ensalada|cogollo|rucula|ajo/],['Huevos, leche y mantequilla',/huevo|leche|mantequilla|nata/],['Yogures y postres',/yogur|flan|natillas|postre|kefir/],['Panadería',/pan |^pan|tostad|hogaza|barra|bolleria/],['Arroz, legumbres y pasta',/arroz|pasta|macarron|espagueti|quinoa|lenteja|garbanzo|alubia|cuscus/],['Aceite, especias y salsas',/aceite|sal |especia|oregano|pimienta|salsa|vinagre|mayonesa|ketchup/],['Conservas y caldos',/conserva|caldo|atun|maiz|aceituna|oliva|lata|crema de/],['Agua y bebidas',/agua|zumo|refresco|cerveza|vino/]];
+const SECW=[['Limpieza y hogar',/bolsas? (de )?basura|bolsas? zip|papel (de )?aluminio|film|estropajo|lavavajillas|detergente|suavizante|lejia|friegasuelos|limpiador|bayeta|papel de cocina|servilletas|papel higienico/],['Higiene y cuidado personal',/champu|gel |desodorante|pasta de dientes|cepillo|compresa|crema|colonia|maquinillas?|toallitas/],['Cacao, café e infusiones',/(^| )(cafe|te|infusion|infusiones|manzanilla|cacao|colacao)( |$)/],['Congelados',/ultracongelad|congelad/],['Pescado y marisco',/lubina|merluza|salmon|dorada|emperador|bacalao|gamba|langostino|sepia|calamar|atun fresco|pescado/],['Charcutería y quesos',/queso|jamon|lonchas|fiambre|chorizo|pavo.*lonch|mortadela/],['Carne',/pollo|pavo|conejo|ternera|cerdo|cordero|hamburguesa|lomo|solomillo|carne/],['Fruta y verdura',/calabaza|calabacin|tomate|lechuga|pepino|puerro|cebolla|patata|zanahoria|pimiento|berenjena|esparrago|brocoli|coliflor|espinaca|champi|seta|manzana|platano|naranja|limon|pera|fresa|uva|aguacate|ensalada|cogollo|rucula|ajo/],['Aperitivos',/pipas|patatas fritas|frutos secos|almendras|cacahuete|aceitunas|snack|nachos/],['Huevos, leche y mantequilla',/huevo|leche|mantequilla|nata/],['Yogures y postres',/yogur|flan|natillas|postre|kefir/],['Panadería',/pan |^pan|tostad|hogaza|barra|bolleria/],['Arroz, legumbres y pasta',/arroz|pasta|macarron|espagueti|quinoa|lenteja|garbanzo|alubia|cuscus/],['Aceite, especias y salsas',/aceite|sal |especia|oregano|pimienta|salsa|vinagre|mayonesa|ketchup/],['Conservas y caldos',/conserva|caldo|atun|maiz|aceituna|oliva|lata|crema de/],['Agua y bebidas',/agua|zumo|refresco|cerveza|vino/]];
 const guessSec=n=>{const x=norm(n)+' ';for(const [s,r] of SECW)if(r.test(x))return s;return'Otros'};
 function parseM(txt){const t=String(txt||'').replace(/\s+/g,' ').trim();if(t.length<4)return null;
-  const U='(?:gramos|g|kilos?|kg|ml|litros?|l|unidades|ud\\.?|rebanadas|lonchas)';
+  const U='(?:gramos|g|kilos?|kg|ml|mililitros|litros?|l|unidades|ud\\.?|rebanadas|lonchas|bolsas|bolsitas|rollos|lavados|servicios|sobres|latas|botellas|briks|m)';
   const re=new RegExp('((?:bandeja|paquete|pieza|bote|tarrina|manojo|malla|botella|tarro|lata|bolsa|brik|garrafa|caja|pack|\\d+\\s*(?:briks?|vasitos?|paquetes?|mini briks?)\\s*x)\\s*)?(\\d+(?:[.,]\\d+)?)\\s*'+U+'(?![a-záéíóúñ])(?:\\s*\\([^)]*\\))?(?:\\s*aprox\\.?)?(?:\\s*escurrido)?','i');
-  const m=t.match(re);if(!m||m.index<2)return null;
+  const reK=new RegExp(re.source.replace('\\s*)?(\\d','\\s*)(\\d'),'i');
+  let m=t.match(reK);if(!m||m.index<2)m=t.match(re);if(!m||m.index<2)return null;
   const n=t.slice(0,m.index).replace(/[|·,\-\s]+$/,'').trim();if(!n)return null;
   const f=m[0].replace(/gramos/i,'g').replace(/kilos?/i,'kg').replace(/litros?/i,'l').replace(/unidades/i,'ud.').toLowerCase().trim();
   let p=null;const pu=t.match(/(\d+(?:[.,]\d+)?)\s*€\s*(?:\/\s*)?(?:por\s*)?(?:unidad|ud\.?|pack)/i);
@@ -352,9 +355,11 @@ function rSug(){const q=norm(qAdd).trim();if(!q)return'';const px=parseM(qAdd);
   if(!px&&/[\n,;]/.test(qAdd)){const L=varias(qAdd);if(L.length>1)return`<div class="sug"><button class="sgi" data-act="addvarias"><span><b>Añadir ${L.length} cosas</b><br><span class="fm">${esc(L.slice(0,6).join(' · '))}${L.length>6?'…':''}</span></span></button></div>`}
   if(px)return`<div class="sug"><button class="sgi" data-act="regm"><span><b>Añadir de Mercadona: ${esc(px.n)}</b><br><span class="fm">${esc(px.f)} · ${px.p!=null?eur(px.p):'sin precio'} · ${esc(px.sec)}</span></span></button></div>`;
   const w=q.split(/\s+/);
-  const M=catItems().filter(c=>w.every(x=>norm(c.k).includes(x))).slice(0,6);
-  return`<div class="sug">${M.map(c=>`<button class="sgi" data-act="cadd" data-c="${esc(c.k)}">${foto(c.k)}<span><b>${esc(c.n)}</b><br><span class="fm">${esc(c.f)} · ${eur(c.p)}</span></span></button>`).join('')}
-<div class="acts" style="padding:8px"><button class="mini on" data-act="addgen">Añadir «${esc(qAdd.trim())}»</button><button class="mini" data-act="addprox">Para la próxima semana</button><a class="mini" href="${esc(mLink(qAdd.trim()))}">Buscar en Mercadona</a></div></div>`}
+  const M=catItems().filter(c=>w.every(x=>norm(c.k).includes(x.replace(/s$/,'')))).slice(0,6),Q=esc(qAdd.trim());
+  return`<div class="sug">${M.length?`<div class="sgh">En tus productos</div>`+M.map(c=>`<button class="sgi" data-act="cadd" data-c="${esc(c.k)}">${foto(c.k)}<span style="flex:1"><b>${esc(c.n)}</b><br><span class="fm">${esc(c.f)} · ${eur(c.p)}</span></span><span class="sgplus">+ Añadir</span></button>`).join(''):''}
+<button class="sgi" data-act="addgen"><span style="flex:1"><b>Añadir «${Q}»</b><br><span class="fm">${M.length?'Como producto nuevo, sin concretar':'No está en tus productos: se añade y luego eliges el concreto'}</span></span><span class="sgplus">+ Añadir</span></button>
+<div class="sgm"><a class="mini" href="${esc(mLink(qAdd.trim()))}">Buscarlo en Mercadona</a><button class="mini" data-act="addprox">Para la próxima semana</button>
+<span class="fm" style="flex-basis:100%">En Mercadona, copia el producto (nombre, formato y precio) o pulsa Compartir › Cabaç, y se añade con su precio.</span></div></div>`}
 function rAlt(i){const A=alternativas(i);return`<div class="alt"><div class="row" style="justify-content:space-between"><b>Elige el producto</b><button class="mini" data-act="alt" data-id="${i.id}">Cerrar</button></div>
 ${A.length?A.map(c=>{const cv=cubre(i,c);return`<div class="altc ${norm(c.n)===norm(i.producto)&&norm(c.f)===norm(i.formato)?'sel':''}"><div class="row" style="flex-wrap:nowrap">${foto(c.k)}<div><div class="nm">${esc(c.n)}</div><div class="fm">${esc(c.f)} · ${eur(c.p)}${cv.txt?' · '+esc(cv.txt):''}</div></div></div>
 <div class="acts"><a class="mini" href="${esc(mLink(c.n))}">Ver foto</a><button class="mini on" data-act="pick" data-id="${i.id}" data-c="${esc(c.k)}">Elegir</button></div></div>`}).join('')
@@ -776,6 +781,14 @@ document.addEventListener('submit',e=>{e.preventDefault();const f=e.target,p=(f.
   else if(f.dataset.lista){const pr=num(f.pr.value),mem=S.precios['otras:'+p.toLowerCase()];S.otras.push({id:uid(),lista:f.dataset.lista,producto:p,cant:Math.max(1,+f.n.value||1),precio:pr!=null?pr:(mem??null),hecho:false});if(pr!=null)S.precios['otras:'+p.toLowerCase()]=pr}
   save();render();});
 
+function entrante(){let p;try{p=new URLSearchParams(location.search)}catch(e){return}const t=[p.get('title'),p.get('text')].filter(Boolean).join(' ').trim();if(!t&&!p.get('url'))return;
+  const limpio=t.replace(/https?:\/\/\S+/g,'').replace(/\s*[|·–-]\s*Mercadona.*$/i,'').replace(/^Mira (este producto|esto)[^:]*:\s*/i,'').replace(/\s+/g,' ').trim();
+  try{history.replaceState(null,'',location.pathname)}catch(e){}if(!limpio)return;
+  let x=null;const ti=(p.get('title')||'').replace(/\s*[|·–-]\s*Mercadona.*$/i,'').trim();
+  if(ti){const tx=(p.get('text')||'').replace(/https?:\/\/\S+/g,' ');const y=parseM('x '+tx),pp=tx.match(/(\d+(?:[.,]\d+)?)\s*€\s*(?:\/\s*)?(?:por\s*)?(?:unidad|ud\.?|pack)?/i);x={n:ti,f:y?y.f:'',p:y&&y.p!=null?y.p:(pp?num(pp[1]):null),sec:guessSec(ti)};if(!y&&x.p==null){const z=parseM(limpio);if(z&&z.n.length>=ti.length-2)x=z}}else x=parseM(limpio);
+  if(x){regCat(x);S.compra.push({id:uid(),ing:x.n,ok:true,producto:x.n,formato:x.f,envases:1,precio:x.p,estimado:false,seccion:x.sec,para:'',sobra:'',tengo:false,hecho:false,origen:'manual'})}
+  else S.compra.push(aplicaV({id:uid(),ing:limpio,producto:limpio,formato:'',envases:1,precio:S.precios[pkey(limpio,'')]??null,estimado:false,seccion:guessSec(limpio),para:'',sobra:'',tengo:false,hecho:false,origen:'manual'}));
+  tab='compra';save();render();status('«'+(x?x.n:limpio)+'» añadido a la lista.')}
 async function buzon(){if(!db)return;try{const ref=db.doc('app/importar'),v=val(await ref.get());
   if(v&&v.menu&&typeof v.menu==='object'){for(const [k,x] of Object.entries(v.menu))if(/^\d-(comida|cena)$/.test(k)&&x&&typeof x==='object')S.menu[k]=Object.assign(S.menu[k]||{},{plato:String(x.plato??(S.menu[k]||{}).plato??''),fuera:!!x.fuera,tupper:!!x.tupper});if(!v.catalogo){await ref.delete();save();render()}}
   if(v&&v.catalogo&&typeof v.catalogo==='object'){let n=0;for(const [k,x] of Object.entries(v.catalogo)){const p=num(x&&x.precio);if(p==null)continue;S.catalogo[String(k)]={precio:p,f:String(x.f||''),sec:SECC.includes(x.sec)?x.sec:'Otros'};n++}
@@ -800,7 +813,7 @@ if(C&&C.use){
     const timer=setTimeout(()=>status('La nube tarda en responder; se guarda en este navegador.'),10000);
     try{const snap=await db.doc('app/estado').get();clearTimeout(timer);
       const v=val(snap);
-      if(v&&v.json){S=Object.assign(blank(),JSON.parse(v.json));lastAt=v.at||0;render()}buzon();if(arregla())render();escucha()}
+      if(v&&v.json){S=Object.assign(blank(),JSON.parse(v.json));lastAt=v.at||0;render()}buzon();if(arregla())render();escucha();entrante()}
     catch(e){clearTimeout(timer);status('No se pudo leer la nube; uso lo guardado en este navegador.')}}).catch(()=>{});
 }
 }
