@@ -258,7 +258,7 @@ const SB_URL='https://jxswqiirvlyggrdidqnc.supabase.co',SB_KEY='sb_publishable_R
 const CASA=['lostinlaparra@gmail.com','mariateland@gmail.com'];
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 window.CABAC_SB=sb;
-window.CABAC_BUILD='1795718874';
+window.CABAC_BUILD='1795788609';
 {let mirando=false;const mira=async()=>{if(mirando||document.hidden)return;mirando=true;try{const t=await (await fetch('./?v='+Date.now(),{cache:'no-store'})).text();const m=t.match(/CABAC_BUILD='(\d+)'/);
   if(m&&m[1]!==window.CABAC_BUILD){const ae=document.activeElement;if(!(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)))location.reload();}}catch(e){}mirando=false};
  document.addEventListener('visibilitychange',mira);window.addEventListener('focus',mira);setInterval(mira,30*60*1000);setTimeout(mira,4000);}
@@ -347,7 +347,12 @@ Arroz blanco con verduras salteadas~v~~25~arroz:150:g|calabacín:1:ud|zanahoria:
 Ensalada templada de pasta y atún~v~~20~pasta:200:g|atún al natural:3:ud|tomate cherry:250:g|maíz dulce:1:ud|huevos:2:ud~Cuece la pasta según el paquete y los huevos 10 min.|Escurre la pasta y déjala templar.|Mézclala con el atún escurrido, el tomate en mitades, el maíz y el huevo picado.|Aliña con aceite y sal.~`.split('\n').map(l=>{const [n,t,c,mi,ing,pa,co]=l.split('~');return{n,t,c:!!c,r:{nombre:n,minutos:+mi,ingredientes:ing.split('|').map(x=>{const [nombre,cantidad,unidad]=x.split(':');return{nombre,cantidad:+cantidad,unidad}}),pasos:pa.split('|'),cosori:co||''}}});
 function recBase(n){return RB.find(x=>norm(x.n)===norm(n))}
 function pon(k,x){const v=S.menu[k]=S.menu[k]||{};v.plato=x.n;if(x.id){S.mias[k]=x.id;S.elegida[k]=2}else if(x.r){S.recetas[k]={plato:x.n,op:[x.r]};S.elegida[k]=0}}
-function asegura(){let ch=false;for(const c of comidas().filter(cocina)){if(elegidaDe(c))continue;const R=S.recetas[c.k];if(R&&R.plato===c.plato&&R.op&&R.op.length)continue;const b=recBase(c.plato);if(b){S.recetas[c.k]={plato:b.n,op:[b.r]};S.elegida[c.k]=0;ch=true}}if(ch)save()}
+function deshazCierre(){const A=S.cierreAnt;if(!A)return;const ids=new Set([...(A.compra||[]),...(A.otras||[])].map(i=>i.id));
+  Object.assign(S,{semana:A.semana,menu:A.menu||{},recetas:A.recetas||{},elegida:A.elegida||{},mias:A.mias||{},compra:A.compra||[],otras:A.otras||[],real:A.real,proxima:A.proxima||[],listaHash:''});
+  if(A.menuSig)S.menuSig=A.menuSig;if(A.menuPrev)S.menuPrev=A.menuPrev;else delete S.menuPrev;S.historial.length=A.hist;S.borr=(S.borr||[]).filter(x=>!ids.has(x));delete S.cierreAnt;save();render();status('Cierre deshecho: vuelve la semana del '+fSem(S.semana)+'.')}
+function recupera(){if(S.recup1||!S.menuPrev||S.cierreAnt)return false;S.recup1=true;const H=S.historial||[],u=H[H.length-1];
+  if(u&&u.semana===lunesDe(S.semana,-1)){for(const [k,v] of Object.entries(S.menuPrev)){const c=S.menu[k];if(v&&(v.plato||v.fuera||v.tupper)&&!(c&&(c.plato||c.fuera||c.tupper)))S.menu[k]=JSON.parse(JSON.stringify(v))}S.listaHash=''}return true}
+function asegura(){let ch=false;for(const c of comidas().filter(cocina)){if(elegidaDe(c))continue;const mi=S.libro.find(r=>norm(r.nombre)===norm(c.plato));if(mi){S.mias[c.k]=mi.id;S.elegida[c.k]=2;ch=true;continue}const R=S.recetas[c.k];if(R&&R.plato===c.plato&&R.op&&R.op.length)continue;const b=recBase(c.plato);if(b){S.recetas[c.k]={plato:b.n,op:[b.r]};S.elegida[c.k]=0;ch=true}}if(ch)save()}
 const PLATOS=RB;
 function proponer(k0){const usad=new Set([...Object.values(S.menu),...Object.values(S.menuPrev||{})].map(v=>norm((v&&v.plato)||'')));
   const pool=[...PLATOS,...S.libro.map(r=>({n:r.nombre,t:'m',id:r.id}))].filter(x=>x.n&&!usad.has(norm(x.n)));
@@ -357,7 +362,7 @@ function proponer(k0){const usad=new Set([...Object.values(S.menu),...Object.val
 function hoyIdx(){const d=new Date();d.setHours(12,0,0,0);return Math.round((d-new Date(S.semana+'T12:00'))/864e5)}
 let nwNo=false;
 function rNueva(){if(nwNo)return'';const L=lunesDe(null,0),viernes=hoyIdx()===6;if(!(L>S.semana)&&!viernes)return'';const sig=fSem(lunesDe(S.semana,1));
-  return`<div class="nw"><b>${viernes?'Hoy es día de compra 🧺':'Ya es la semana del '+esc(fSem(L))}</b><span>${viernes?`Cerrad esta semana y planificad la del sábado ${esc(sig)} para hacer la lista antes de ir al súper.`:`¿Cerramos la del ${esc(fSem(S.semana))}?`} Se guarda lo gastado; lo de cada semana y lo que quedaba poco entran solos en la lista nueva.</span><div class="row"><button class="btn" data-act="cerrar">Cerrar y planificar</button>${S.real||!S.compra.length?'':'<button class="btn alt" data-tab="gastos">Antes, el ticket</button>'}<button class="btn alt" data-act="nwno">Ahora no</button></div></div>`}
+  return`<div class="nw"><b>${viernes?'Hoy es día de compra 🧺':'Ya es la semana del '+esc(fSem(L))}</b><span>${viernes?`Pasad a la semana del sábado ${esc(sig)} para tener la lista lista antes de ir al súper.`:`¿Cerramos la del ${esc(fSem(S.semana))}?`} Se guarda lo gastado y la semana nueva empieza con el mismo menú y lo que no hayáis comprado aún; solo cambiáis lo que queráis.</span><div class="row"><button class="btn" data-act="cerrar">Cerrar y planificar</button>${S.real||!S.compra.length?'':'<button class="btn alt" data-tab="gastos">Antes, el ticket</button>'}<button class="btn alt" data-act="nwno">Ahora no</button></div></div>`}
 function rHoy(){let d=hoyIdx(),M=null;if(d===-1&&S.menuPrev){d=6;M=S.menuPrev}if(d<0||d>6)return'';
   const cs=M?['comida','cena'].map(m=>{const v=M[d+'-'+m]||{};return{k:'',d,m,plato:(v.plato||'').trim(),fuera:!!v.fuera,tupper:!!v.tupper}}):['comida','cena'].map(m=>comidas().find(c=>c.k===d+'-'+m)).filter(Boolean);
   return`<div class="hoy"><div class="hk">HOY · ${esc(DIAS[d].toUpperCase())}</div>${cs.map(c=>{const t=c.fuera?'Comemos fuera':c.tupper?(c.plato?'Tupper: '+c.plato:'Tupper'):(c.plato||'Sin decidir');const r=c.k&&cocina(c)&&elegidaDe(c);
@@ -459,7 +464,7 @@ function migraSab(){if(!S.semana||new Date(S.semana+'T12:00').getDay()!==1)retur
   if(Object.values(sig).some(v=>v&&(v.plato||v.fuera||v.tupper)))S.menuSig=Object.assign(S.menuSig||{},sig);
   if(S.menuPrev){const p={};for(const [k,v] of Object.entries(S.menuPrev)){const n=nk(k);if(n)p[n.k]=v}S.menuPrev=p}
   const d=new Date(S.semana+'T12:00');d.setDate(d.getDate()-2);S.semana=d.toISOString().slice(0,10);return true}
-function arregla(){let ch=migraSab();if(ch)setTimeout(save,0);for(const L of [S.compra,S.otras])for(const i of L||[])if(i.por===undefined)i.por='';
+function arregla(){let ch=migraSab();if(recupera())ch=true;if(ch)setTimeout(save,0);for(const L of [S.compra,S.otras])for(const i of L||[])if(i.por===undefined)i.por='';
   for(const i of S.compra){if(/€|gramos|\|/i.test(i.producto)){const x=parseM(i.producto);if(x){regCat(x);Object.assign(i,{producto:x.n,formato:x.f,precio:x.p,seccion:x.sec,ok:true,ing:x.n,estimado:false});ch=true}}}
   const seen={},okN=new Set(S.compra.filter(okI).map(i=>norm(i.producto))),n0=S.compra.length;
   S.compra=S.compra.filter(i=>{const k=norm(ckey(i));let keep=true;if(seen[k])keep=false;else{seen[k]=1;if(!i.formato&&!okI(i)&&okN.has(norm(i.producto)))keep=false}if(!keep)marcaB(i.id);return keep});
@@ -708,7 +713,7 @@ ${sample?`${imgOK?`<label class="fl">Foto o captura del ticket<input type="file"
 <label class="fl">${imgOK?'O pega':'Pega'} aquí el texto del ticket<textarea id="tkTxt" rows="3" placeholder="CEBOLLA MALLA 1KG   1,35"></textarea></label>
 <div class="row" style="margin-top:10px"><button class="btn" data-act="ticket" ${busy?'disabled':''}>Leer ticket</button>${S.real?`<button class="btn alt" data-act="sinreal">Volver al estimado</button>`:''}<span class="prog">${esc(ticketMsg)}</span></div>`
 :`<div class="prl" style="margin-top:10px">Total del ticket <input id="realTot" inputmode="decimal" placeholder="€" style="width:120px" value="${S.real?String(S.real.total).replace('.',','):''}"><button class="btn" data-act="realman">Guardar</button></div>${S.real?`<button class="btn alt" data-act="sinreal" style="margin-top:8px">Volver al estimado</button>`:''}`}</div>
-<div class="box" style="margin-top:14px"><h3>Cerrar la semana</h3><p class="note" style="margin-top:4px">Guarda el gasto, vacía las listas y empieza la semana siguiente. Tu catálogo, recetas y elecciones se quedan.</p>
+${S.cierreAnt?`<div class="box" style="margin-top:14px"><h3>¿Cerraste la semana sin querer?</h3><p class="note" style="margin-top:4px">Vuelve todo como estaba en la semana del ${esc(fSem(S.cierreAnt.semana))}: menú, recetas y lista.</p><button class="btn alt full" data-act="deshazCierre">Deshacer el cierre</button></div>`:''}<div class="box" style="margin-top:14px"><h3>Cerrar la semana</h3><p class="note" style="margin-top:4px">Guarda el gasto, vacía las listas y empieza la semana siguiente. Tu catálogo, recetas y elecciones se quedan.</p>
 <div class="row" style="margin-top:10px">${confirmCierre?`<span>¿Guardar ${eur(T.t)} y empezar la semana del ${esc(fSem(lunesDe(S.semana,1)))}?</span><button class="btn" data-act="cerrar">Sí, cerrar</button><button class="btn alt" data-act="nocerrar">Cancelar</button>`:`<button class="btn alt" data-act="precerrar">Cerrar la semana del ${esc(fSem(S.semana))}</button>`}</div></div>`;
   if(!H.length)return h+`<div class="empty" style="margin-top:14px">Aquí verás cuánto se va cada semana en Mercadona, mercado, droguería y farmacia.</div>`;
   const max=Math.max(...H.map(x=>x.total),1),media=H.reduce((a,x)=>a+x.total,0)/H.length,cols=[{k:'m',n:'Mercadona',c:'var(--g)'},...OTRAS];
@@ -931,11 +936,16 @@ document.addEventListener('click',e=>{
   else if(a==='oborra'){marcaB(id);S.otras=S.otras.filter(i=>i.id!==id);save();render()}
   else if(a==='precerrar'){confirmCierre=true;render()}
   else if(a==='nocerrar'){confirmCierre=false;render()}
-  else if(a==='cerrar'){const T=totales();S.historial.push({semana:S.semana,mercadona:+T.m.toFixed(2),estimado:+T.est.toFixed(2),real:!!S.real,otras:Object.fromEntries(Object.entries(T.o).map(([x,v])=>[x,+v.toFixed(2)])),total:+T.t.toFixed(2)});
-    S.compra.forEach(i=>marcaB(i.id));S.otras.forEach(i=>marcaB(i.id));
-    const nueva=[...(S.proxima||[]),...Object.values(S.fijos||{})].filter((x,ix,arr)=>arr.findIndex(y=>norm(y.producto)===norm(x.producto))===ix).map(x=>aplicaV({id:uid(),ing:x.producto,producto:x.producto,formato:x.formato||'',envases:1,precio:x.precio??null,estimado:false,seccion:x.seccion||guessSec(x.producto),para:'',sobra:'',tengo:false,hecho:false,origen:'manual'}));
-    S.menuPrev=JSON.parse(JSON.stringify(S.menu));const sigM=S.menuSig||{};delete S.menuSig;nwNo=false;
-    Object.assign(S,{semana:lunesDe(S.semana,1),menu:sigM,recetas:{},elegida:{},mias:{},compra:nueva,otras:[],real:null,proxima:[],listaHash:''});confirmCierre=false;save();status(nueva.length?nueva.length+' cosas ya en la lista nueva (lo que quedaba poco y lo de cada semana).':'Semana nueva empezada.');render()}
+  else if(a==='cerrar'){const T=totales(),cp=x=>JSON.parse(JSON.stringify(x??null));
+    const snap=cp({semana:S.semana,menu:S.menu,recetas:S.recetas,elegida:S.elegida,mias:S.mias,compra:S.compra,otras:S.otras,real:S.real,proxima:S.proxima,menuSig:S.menuSig||null,menuPrev:S.menuPrev||null,hist:S.historial.length});
+    S.historial.push({semana:S.semana,mercadona:+T.m.toFixed(2),estimado:+T.est.toFixed(2),real:!!S.real,otras:Object.fromEntries(Object.entries(T.o).map(([x,v])=>[x,+v.toFixed(2)])),total:+T.t.toFixed(2)});
+    const quedan=S.compra.filter(i=>!i.hecho&&i.origen!=='auto');S.compra.filter(i=>!quedan.includes(i)).forEach(i=>marcaB(i.id));
+    const otQ=S.otras.filter(i=>!i.hecho);S.otras.filter(i=>i.hecho).forEach(i=>marcaB(i.id));
+    const nueva=[...(S.proxima||[]),...Object.values(S.fijos||{})].filter((x,ix,arr)=>arr.findIndex(y=>norm(y.producto)===norm(x.producto))===ix).filter(x=>!quedan.some(q=>norm(q.producto)===norm(x.producto))).map(x=>aplicaV({id:uid(),ing:x.producto,producto:x.producto,formato:x.formato||'',envases:1,precio:x.precio??null,estimado:false,seccion:x.seccion||guessSec(x.producto),para:'',sobra:'',tengo:false,hecho:false,origen:'manual'}));
+    S.menuPrev=cp(S.menu);const menuN=Object.assign(cp(S.menu)||{},S.menuSig||{});delete S.menuSig;nwNo=false;
+    Object.assign(S,{semana:lunesDe(S.semana,1),menu:menuN,compra:[...quedan,...nueva],otras:otQ,real:null,proxima:[],listaHash:'',cierreAnt:snap});confirmCierre=false;save();render();
+    status('Semana nueva con el mismo menú: cambia solo lo que quieras.',deshazCierre)}
+  else if(a==='deshazCierre'){deshazCierre()}
 });
 document.addEventListener('focusin',e=>{if(e.target.id==='qAdd'){document.body.classList.add('typing');setTimeout(()=>{const b=e.target.closest('.sbox');b&&b.scrollIntoView({block:'start',behavior:'smooth'})},250)}});
 document.addEventListener('focusout',e=>{if(e.target.id==='qAdd')setTimeout(()=>{if(!document.activeElement||document.activeElement.id!=='qAdd')document.body.classList.remove('typing')},300)});
