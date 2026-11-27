@@ -261,7 +261,7 @@ const SB_URL='https://jxswqiirvlyggrdidqnc.supabase.co',SB_KEY='sb_publishable_R
 const CASA=['lostinlaparra@gmail.com','mariateland@gmail.com'];
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 window.CABAC_SB=sb;
-window.CABAC_BUILD='1795799547';
+window.CABAC_BUILD='1795800751';
 {let mirando=false;const mira=async()=>{if(mirando||document.hidden)return;mirando=true;try{const t=await (await fetch('./?v='+Date.now(),{cache:'no-store'})).text();const m=t.match(/CABAC_BUILD='(\d+)'/);
   if(m&&m[1]!==window.CABAC_BUILD){const ae=document.activeElement;if(!(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)))location.reload();}}catch(e){}mirando=false};
  document.addEventListener('visibilitychange',mira);window.addEventListener('focus',mira);setInterval(mira,30*60*1000);setTimeout(mira,4000);}
@@ -355,7 +355,7 @@ function deshazCierre(){const A=S.cierreAnt;if(!A)return;const ids=new Set([...(
   if(A.menuSig)S.menuSig=A.menuSig;if(A.menuPrev)S.menuPrev=A.menuPrev;else delete S.menuPrev;S.historial.length=A.hist;S.borr=(S.borr||[]).filter(x=>!ids.has(x));delete S.cierreAnt;save();render();status('Cierre deshecho: vuelve la semana del '+fSem(S.semana)+'.')}
 function recupera(){if(S.recup1||!S.menuPrev||S.cierreAnt)return false;S.recup1=true;const H=S.historial||[],u=H[H.length-1];
   if(u&&u.semana===lunesDe(S.semana,-1)){for(const [k,v] of Object.entries(S.menuPrev)){const c=S.menu[k];if(v&&(v.plato||v.fuera||v.tupper)&&!(c&&(c.plato||c.fuera||c.tupper)))S.menu[k]=JSON.parse(JSON.stringify(v))}S.listaHash=''}return true}
-function asegura(){let ch=false;for(const c of comidas().filter(cocina)){if(elegidaDe(c))continue;const mi=S.libro.find(r=>norm(r.nombre)===norm(c.plato));if(mi){S.mias[c.k]=mi.id;S.elegida[c.k]=2;ch=true;continue}const R=S.recetas[c.k];if(R&&R.plato===c.plato&&R.op&&R.op.length)continue;const b=recBase(c.plato);if(b){S.recetas[c.k]={plato:b.n,op:[b.r]};S.elegida[c.k]=0;ch=true}}if(ch)save()}
+function asegura(){let ch=false;for(const c of comidas().filter(cocina)){if(elegidaDe(c))continue;if((S.sinRec||{})[c.k]===c.plato)continue;const mi=S.libro.find(r=>norm(r.nombre)===norm(c.plato));if(mi){S.mias[c.k]=mi.id;S.elegida[c.k]=2;ch=true}}if(ch)save()}
 const PLATOS=RB;
 function proponer(k0){const usad=new Set([...Object.values(S.menu),...Object.values(S.menuPrev||{})].map(v=>norm((v&&v.plato)||'')));
   const pool=[...PLATOS,...S.libro.map(r=>({n:r.nombre,t:'m',id:r.id}))].filter(x=>x.n&&!usad.has(norm(x.n)));
@@ -395,26 +395,28 @@ function pita(){try{const A=new (window.AudioContext||window.webkitAudioContext)
 setInterval(()=>{if(!tmr)return;if(Date.now()>=tmr.end){const l=tmr.l;tmr=null;pita();status('⏱ ¡Tiempo! '+l);rCook()}else tick()},500);
 function secs(){const o=(S.ordenSec||[]).filter(x=>SECC.includes(x));return[...o,...SECC.filter(x=>!o.includes(x))]}
 async function wake(on){try{if(on&&'wakeLock' in navigator){wl=await navigator.wakeLock.request('screen')}else if(!on&&wl){await wl.release();wl=null}}catch(e){}}
-function quita(id){const ix=S.compra.findIndex(i=>i.id===id);if(ix<0)return;const q=S.compra[ix];marcaB(id);S.compra.splice(ix,1);if(openRow===id)openRow=null;save();render();status('«'+q.producto+'» quitado.',()=>{S.compra.splice(Math.min(ix,S.compra.length),0,Object.assign({},q,{id:uid()}));save();render()})}
+function quita(id){const ix=S.compra.findIndex(i=>i.id===id);if(ix<0)return;const q=S.compra[ix],kq=norm(q.ing||q.producto);marcaB(id);S.compra.splice(ix,1);if(q.origen==='auto'){S.quitados=[...new Set([...(S.quitados||[]),kq])]}if(openRow===id)openRow=null;save();render();status('«'+q.producto+'» quitado.',()=>{S.quitados=(S.quitados||[]).filter(x=>x!==kq);S.compra.splice(Math.min(ix,S.compra.length),0,Object.assign({},q,{id:uid()}));save();render()})}
 function tenemos(it){it.tengo=!it.tengo;save();render();status(it.tengo?'«'+it.producto+'»: lo tenéis.':'«'+it.producto+'» vuelve a la lista.',()=>{it.tengo=!it.tengo;save();render()})}
 let ed=null,borrando=null,altOpen=null,catQ='',impMsg='',qAdd='',assets=null,imgOK=false,ticketMsg='';
 let lastAt=0,pend=false;
 const val=snap=>snap?(typeof snap.data==='function'?snap.data():(snap.data??snap)):null;
 let S=blank(),tab='menu',db=null,sample=null,busy='',tSave=null,confirmCierre=false;
 try{const l=JSON.parse(localStorage.getItem('menuSora'));if(l)S=Object.assign(blank(),l)}catch(e){}
+try{marcaJ(false)}catch(e){}
 
 let tTo=null,undoFn=null;function status(t,u){const e=$('#status');if(!e)return;undoFn=u||null;e.innerHTML=esc(t)+(u?'<button class="undo" data-undo>Deshacer</button>':'');e.classList.add('on');e.classList.toggle('act',!!u);clearTimeout(tTo);tTo=setTimeout(()=>{e.classList.remove('on','act');undoFn=null},u?6000:3500)}
 let sucio=false,fallo=false,tRetry=null,oyendo=false;try{sucio=localStorage.getItem('cabacSucio')==='1'}catch(e){}
 function setSucio(v){sucio=v;try{localStorage.setItem('cabacSucio',v?'1':'')}catch(e){}offl()}
 function offl(){const e=$('#offl');if(!e)return;const off=!navigator.onLine;e.hidden=!(off||(sucio&&fallo));e.textContent=off?'Sin conexión · lo guardo y lo subo al volver':'Reintentando guardar en la nube…'}
 function save(){
+  marcaJ(true);
   {const Y=yo();if(Y)for(const L of [S.compra,S.otras])for(const i of L||[])if(i.por===undefined)i.por=Y}
   try{localStorage.setItem('menuSora',JSON.stringify(S))}catch(e){}
   setSucio(true);clearTimeout(tSave);pend=true;tSave=setTimeout(sube,700);
 }
 async function sube(){clearTimeout(tRetry);if(!db){pend=false;return}pend=true;
   try{const ref=db.doc('app/estado');
-    try{const r=val(await ref.get());if(r&&r.json&&r.at>lastAt)fusiona(JSON.parse(r.json))}catch(e){}
+    try{const r=val(await ref.get());if(r&&r.json&&r.at>lastAt){fusiona(Object.assign(JSON.parse(r.json),{at:r.at}));marcaJ(false);try{localStorage.setItem('menuSora',JSON.stringify(S))}catch(e){}render()}}catch(e){console.warn('fusiona',e)}
     const at=Date.now();await ref.set({json:JSON.stringify(S),at});lastAt=at;pend=false;fallo=false;setSucio(false);
     if(!oyendo)escucha()}
   catch(e){pend=false;fallo=true;offl();tRetry=setTimeout(()=>{if(sucio)sube()},navigator.onLine?10000:30000)}}
@@ -513,14 +515,25 @@ ${A.length?A.map(c=>{const cv=cubre(i,c);return`<div class="altc ${norm(c.n)===n
 <div class="acts"><a class="mini" href="${esc(mLink(c.n))}">Ver foto</a><button class="mini on" data-act="pick" data-id="${i.id}" data-c="${esc(c.k)}">Elegir</button></div></div>`}).join('')
 :`<p class="note">No hay alternativas en tu catálogo para esto todavía.</p>`}
 <p class="note">¿No está? Búscalo en <a href="${esc(mLink(i.producto))}">Mercadona</a> y corrige el precio en la lista, o pídeme que lo añada al catálogo.</p></div>`}
-function marcaB(x){S.borr=(S.borr||[]);S.borr.push(x);if(S.borr.length>400)S.borr=S.borr.slice(-400)}
-function fusiona(R){const del=new Set([...(R.borr||[]),...(S.borr||[])]);
-  for(const L of ['compra','otras']){const ids=new Set((S[L]||[]).map(i=>i.id));for(const i of (R[L]||[]))if(!ids.has(i.id))S[L].push(i);S[L]=S[L].filter(i=>!del.has(i.id))}
-  {const ids=new Set((S.proxima||[]).map(x=>x.id));S.proxima=[...(S.proxima||[]),...(R.proxima||[]).filter(x=>!ids.has(x.id)&&!del.has(x.id))]}
-  for(const K of ['catalogo','vinculos','fotos','precios','fijos','usos']){const m=Object.assign({},R[K]||{},S[K]||{});for(const k in m)if(del.has('c:'+k)&&K==='catalogo')delete m[k];S[K]=m}
-  const lb=new Set((S.libro||[]).map(r=>r.id));for(const r of (R.libro||[]))if(!lb.has(r.id)&&!del.has('r:'+r.id))S.libro.push(r);S.libro=S.libro.filter(r=>!del.has('r:'+r.id));
-  for(const k in (R.menu||{}))if(!S.menu[k])S.menu[k]=R.menu[k];
-  S.borr=[...del].slice(-400)}
+function marcaB(x){S.borr=(S.borr||[]);S.borr.push(x);if(S.borr.length>3000)S.borr=S.borr.slice(-3000)}
+let lastJ=new Map();const sinT=o=>{if(!o||typeof o!=='object')return JSON.stringify(o);const {t,...r}=o;return JSON.stringify(r)};
+function marcaJ(stamp){const now=Date.now(),nm=new Map();
+  for(const L of ['compra','otras'])for(const i of S[L]||[]){const j=sinT(i);if(stamp&&lastJ.get(i.id)!==j)i.t=now;nm.set(i.id,j)}
+  for(const [k,v] of Object.entries(S.menu||{})){if(!v||typeof v!=='object')continue;const key='m:'+k,j=sinT(v);if(stamp&&lastJ.get(key)!==j)v.t=now;nm.set(key,j)}lastJ=nm}
+function fusiona(R){const del=new Set([...(R.borr||[]),...(S.borr||[])]),L0=S;
+  const dicts=(A,B)=>{for(const K of ['catalogo','vinculos','fotos','precios','fijos','usos']){const m=Object.assign({},A[K]||{},B[K]||{});if(K==='catalogo')for(const k in m)if(del.has('c:'+k))delete m[k];S[K]=m}
+    const lb=new Map([...(A.libro||[]),...(B.libro||[])].map(r=>[r.id,r]));S.libro=[...lb.values()].filter(r=>!del.has('r:'+r.id));
+    S.quitados=[...new Set([...(A.quitados||[]),...(B.quitados||[])])]};
+  if(R.semana&&S.semana&&R.semana>S.semana){
+    const ids=new Set((R.compra||[]).map(i=>i.id)),mias=(L0.compra||[]).filter(i=>i.origen==='manual'&&!i.hecho&&!ids.has(i.id)&&!del.has(i.id)&&(i.t||0)>(R.at||0));
+    S=Object.assign(blank(),R);dicts(R,L0);S.compra=[...(S.compra||[]).filter(i=>!del.has(i.id)),...mias];S.borr=[...del].slice(-3000);return}
+  if(S.semana&&R.semana&&S.semana>R.semana){dicts(R,S);S.borr=[...del].slice(-3000);return}
+  for(const L of ['compra','otras']){const m=new Map((S[L]||[]).map(i=>[i.id,i]));for(const i of (R[L]||[])){const a=m.get(i.id);if(!a||(i.t||0)>(a.t||0))m.set(i.id,i)}S[L]=[...m.values()].filter(i=>!del.has(i.id))}
+  {const ids=new Set((S.proxima||[]).map(x=>x.id));S.proxima=[...(S.proxima||[]),...(R.proxima||[]).filter(x=>!ids.has(x.id)&&!del.has(x.id))].filter(x=>!del.has(x.id))}
+  for(const k in (R.menu||{})){const a=S.menu[k],b=R.menu[k];if(!b)continue;if(!a||(b.t||0)>(a.t||0)){S.menu[k]=b;for(const D of ['recetas','elegida','mias']){S[D]=S[D]||{};if(R[D]&&k in R[D])S[D][k]=R[D][k];else delete S[D][k]}}}
+  if((R.historial||[]).length>(S.historial||[]).length)S.historial=R.historial;
+  for(const K of ['menuPrev','menuSig','cierreAnt','ordenSec','recup1'])if(S[K]==null&&R[K]!=null)S[K]=R[K];
+  dicts(R,S);S.borr=[...del].slice(-3000)}
 function puestosDe(k){return Object.values(S.menu).filter(v=>v&&v.de===k).length}
 function rPon(c){const all=comidas(),i=all.findIndex(x=>x.k===c.k);
   const libres=all.slice(i+1).filter(x=>(!x.plato&&!x.fuera&&!x.tupper)||(S.menu[x.k]||{}).de===c.k),n=puestosDe(c.k);
@@ -582,15 +595,15 @@ V.recetas=()=>{const cs=comidas().filter(cocina);
   return`<h2>Recetas</h2>
 <div class="prog2"><div class="pbar"><i style="width:${(eleg/cs.length*100).toFixed(0)}%"></i></div><span>${eleg} de ${cs.length} con receta</span></div>
 ${sample&&falta?`<button class="btn full" data-act="buscarTodo" ${busy?'disabled':''}>Proponer recetas para ${falta} plato${falta>1?'s':''}</button>`:''}
-${!sample&&falta?'<p class="note">Para ideas de recetas, pídeselas a Claude en el chat y apúntalas con <b>Escribir la mía</b>.</p>':''}
+${!sample&&falta&&!window.CABAC_SB?'<p class="note">Para que te proponga recetas, la app te pedirá permiso para preguntar a Claude.</p>':''}
 ${busy?`<p class="prog">${esc(busy)}</p>`:''}
 ${cs.map(c=>{const R=S.recetas[c.k],ok=R&&R.plato===c.plato,r=elegidaDe(c),e=S.elegida[c.k],open=recOpen===c.k||!r;
   const tipo=e===2?'MI RECETA':e===1?'COSORI':'TRADICIONAL';
   const mia=S.libro.find(x=>x.id===S.mias[c.k]),cards=(ok?R.op.map((o,i)=>rOp(o,i,e===i,c.k)).join(''):'')+(mia?rMia(mia,e===2,c.k):'');
   return`<section class="rc ${r?'done':''}"><div class="when">${DIAS[c.d]} · ${c.m}${c.extra?` · +${c.extra} para tupper`:''}</div><h3>${esc(c.plato)}</h3>
-${r&&!open?`<div class="chosen"><div style="flex:1 1 180px"><div class="k">${tipo} ✓</div>${norm(r.nombre)!==norm(c.plato)?`<b>${esc(r.nombre)}</b>`:''}</div><button class="mini" data-act="cocina" data-k="${c.k}">Cocinar ▶</button><button class="mini" data-act="recopen" data-k="${c.k}">Cambiar</button></div><details><summary>Ingredientes y pasos</summary>${rDet(r)}</details>`
-:`${cards?`<div class="opts" role="radiogroup">${cards}</div>`:`<p class="note">${R?'Has cambiado el plato: pide ideas nuevas.':'Aún sin propuestas.'}</p>`}
-<div class="acts" style="margin-top:10px">${sample?`<button class="mini" data-act="buscar" data-k="${c.k}" ${busy?'disabled':''}>${ok?'Otras ideas':'Proponer'}</button>`:''}<button class="mini" data-act="nueva" data-k="${c.k}">Escribir la mía</button>${S.libro.length?`<select data-usa="${c.k}" aria-label="Usar una receta mía" style="width:auto;min-height:36px;padding:4px 8px;font-size:14px"><option value="">Usar una mía…</option>${S.libro.map(x=>`<option value="${esc(x.id)}" ${S.mias[c.k]===x.id?'selected':''}>${esc(x.nombre)}</option>`).join('')}</select>`:''}${r?`<button class="mini" data-act="recclose">Listo</button>`:''}</div>`}</section>`}).join('')}`};
+${r&&!open?`<div class="chosen"><div style="flex:1 1 180px"><div class="k">${tipo} ✓</div>${norm(r.nombre)!==norm(c.plato)?`<b>${esc(r.nombre)}</b>`:''}</div><button class="mini" data-act="cocina" data-k="${c.k}">Cocinar ▶</button><button class="mini" data-act="recopen" data-k="${c.k}">Cambiar</button><button class="mini" data-act="sinrec" data-k="${c.k}">Sin receta</button></div><details><summary>Ingredientes y pasos</summary>${rDet(r)}</details>`
+:`${cards?`<div class="opts" role="radiogroup">${cards}</div>`:`<p class="note">${recBase(c.plato)?'Hay una receta de Cabaç para este plato.':'Sin receta: escribe la tuya o usa una de Mis recetas.'}</p>`}
+<div class="acts" style="margin-top:10px">${recBase(c.plato)&&!(R&&R.plato===c.plato&&R.op.some(o=>norm(o.nombre)===norm(c.plato)))?`<button class="mini on" data-act="usaBase" data-k="${c.k}">Usar receta de Cabaç</button>`:''}${sample?`<button class="mini" data-act="buscar" data-k="${c.k}" ${busy?'disabled':''}>${ok?'Otras ideas':'Proponer'}</button>`:''}<button class="mini" data-act="nueva" data-k="${c.k}">Escribir la mía</button>${S.libro.length?`<select data-usa="${c.k}" aria-label="Usar una receta mía" style="width:auto;min-height:36px;padding:4px 8px;font-size:14px"><option value="">Usar una mía…</option>${S.libro.map(x=>`<option value="${esc(x.id)}" ${S.mias[c.k]===x.id?'selected':''}>${esc(x.nombre)}</option>`).join('')}</select>`:''}${r?`<button class="mini" data-act="recclose">Listo</button>`:''}</div>`}</section>`}).join('')}`};
 CTA.recetas=()=>{const cs=comidas().filter(cocina),eleg=cs.filter(c=>elegidaDe(c)).length;return eleg?`<button class="btn" data-tab="compra">Ver la lista de la compra (${eleg}/${cs.length}) →</button>`:''};
 
 const UNI=['g','ml','ud','cda','cdta'];
@@ -761,7 +774,7 @@ async function buscar(keys,otras){
 
 function hashLista(){return comidas().filter(cocina).map(c=>{const r=elegidaDe(c);return r?c.k+':'+r.nombre+':'+c.extra:''}).join('|')}
 let autoT=null;function autoLista(){if(busy||tab!=='compra'||superM)return;const h=hashLista();if(!h.replace(/\|/g,'')||h===S.listaHash)return;clearTimeout(autoT);autoT=setTimeout(()=>{if(!busy&&hashLista()!==S.listaHash)hacerLista()},150)}
-async function hacerLista(){const prev=S.compra.filter(i=>i.origen==='auto'),keep=(arr)=>{for(const n of arr){const o=prev.find(x=>norm(x.ing||x.producto)===norm(n.ing||n.producto));if(o){n.tengo=o.tengo;n.hecho=o.hecho;if(o.rev)n.rev=true}else if(!n.tengo)n.rev=true}return arr};S.listaHash=hashLista();
+async function hacerLista(){const prev=S.compra.filter(i=>i.origen==='auto'),keep=(arr)=>{const Q=new Set(S.quitados||[]),out=[];for(const n of arr){const kk=norm(n.ing||n.producto);if(Q.has(kk))continue;const o=prev.find(x=>norm(x.ing||x.producto)===kk);if(o){n.id=o.id;n.tengo=o.tengo;n.hecho=o.hecho;if(o.rev)n.rev=true;if(o.ok&&!n.ok)Object.assign(n,{producto:o.producto,formato:o.formato,precio:o.precio,seccion:o.seccion,ok:true,envases:o.envases})}else if(!n.tengo)n.rev=true;out.push(n)}return out},lapidas=()=>{const v=new Set(S.compra.map(i=>i.id));prev.forEach(i=>{if(!v.has(i.id))marcaB(i.id)})};S.listaHash=hashLista();
   const sel=comidas().filter(cocina).map(c=>({c,r:elegidaDe(c)})).filter(x=>x.r);
   const lines=[],ex={};
   for(const {c,r} of sel){const f=(2+c.extra)/2,dd=`${DIAS[c.d].slice(0,3)} ${c.m}`;for(const g of (r.ingredientes||[])){if(!g.nombre)continue;
@@ -776,7 +789,7 @@ async function hacerLista(){const prev=S.compra.filter(i=>i.origen==='auto'),kee
       if(gen[kk]){gen[kk].para+=', '+dd;if(gen[kk].need&&q&&u===gen[kk].need.u)gen[kk].need.q+=q*f}
       else gen[kk]={id:uid(),ing:String(g.nombre),producto:String(g.nombre),formato:q&&u?`${Math.round(q*f*10)/10} ${u}`:'',need:q&&u?{q:q*f,u}:null,envases:1,precio:null,estimado:true,seccion:guessSec(g.nombre),para:dd,sobra:'',tengo:false,hecho:false,origen:'auto'};if(gen[kk].seccion==='Fruta y verdura')gen[kk].ok=true}}
     for(const x of Object.values(gen))if(x.need)x.formato=`${Math.round(x.need.q*10)/10} ${x.need.u}`;
-    S.compra=[...keep([...exact,...Object.values(gen).map(aplicaV)]),...S.compra.filter(i=>i.origen==='manual')];save();tab='compra';render();return}
+    S.compra=[...keep([...exact,...Object.values(gen).map(aplicaV)]),...S.compra.filter(i=>i.origen==='manual')];lapidas();save();tab='compra';render();return}
   busy='Actualizando la lista con las recetas…';render();
   const p=`Convierte estos ingredientes (recetas de una semana para 2 personas) en la lista de la compra de Mercadona (España).
 - Une los repetidos y suma cantidades.
@@ -797,7 +810,7 @@ Responde SOLO con un array JSON válido: [{"ingrediente":"","producto":"","forma
     if(Array.isArray(arr)){const auto=arr.map(x=>{const k=pkey(x.producto,x.formato),mem=S.precios[k];
       const nq=num(x.necesario_cantidad),nu=['g','ml','ud'].includes(x.necesario_unidad)?x.necesario_unidad:null;
       return{id:uid(),ing:String(x.ingrediente||x.producto||''),need:nq&&nu?{q:nq,u:nu}:null,producto:String(x.producto||''),formato:String(x.formato||''),envases:Math.max(1,Math.round(+x.envases||1)),precio:mem!=null?mem:num(x.precio),estimado:mem==null&&!x.real,seccion:SECC.includes(x.seccion)?x.seccion:'Otros',para:String(x.para||''),sobra:String(x.sobra||''),tengo:!!x.basico,hecho:false,origen:'auto'}}).map(aplicaV);
-      S.compra=[...keep(exact),...keep(auto),...S.compra.filter(i=>i.origen==='manual')];save();tab='compra'}}
+      S.compra=[...keep(exact),...keep(auto),...S.compra.filter(i=>i.origen==='manual')];lapidas();save();tab='compra'}}
   catch(e){errIA(e)}
   busy='';render();
 }
@@ -853,6 +866,8 @@ document.addEventListener('click',e=>{
   else if(a==='open'){openRow=openRow===id?null:id;altOpen=openRow&&item&&!okI(item)?id:null;render()}
   else if(a==='super'){superM=!superM;wake(superM);openRow=null;ordOpen=false;scrollTo(0,0);render()}
   else if(a==='trayT'){trayOpen=!trayOpen;render()}
+  else if(a==='usaBase'){const c=comidas().find(x=>x.k===k),b=c&&recBase(c.plato);if(b){S.recetas[k]={plato:c.plato,op:[b.r]};S.elegida[k]=0;delete S.mias[k];if(S.sinRec)delete S.sinRec[k];recOpen=null;save();render()}}
+  else if(a==='sinrec'){const c=comidas().find(x=>x.k===k);delete S.recetas[k];delete S.elegida[k];delete S.mias[k];S.sinRec=S.sinRec||{};if(c)S.sinRec[k]=c.plato;recOpen=null;save();render();status('Plato sin receta: sus ingredientes salen de la lista.')}
   else if(item&&a==='rvT'){item.tengo=true;delete item.rev;save();render();status('«'+item.producto+'»: lo tenéis.',()=>{item.tengo=false;item.rev=true;save();render()})}
   else if(item&&a==='rvC'){delete item.rev;save();render()}
   else if(a==='rvTodo'){S.compra.forEach(i=>{delete i.rev});save();render()}
@@ -1009,7 +1024,7 @@ async function buzon(){if(!db)return;try{const ref=db.doc('app/importar'),v=val(
 let diferido=false;
 function aplicaRemoto(v){const L=S,R=Object.assign(blank(),JSON.parse(v.json)),del=new Set(R.borr||[]);
   for(const K of ['catalogo','vinculos','fotos','precios','usos']){const m=Object.assign({},L[K]||{},R[K]||{});if(K==='catalogo')for(const k in m)if(del.has('c:'+k))delete m[k];R[K]=m}
-  S=R;lastAt=v.at;arregla();detectaNuevos(true);
+  S=R;lastAt=v.at;arregla();marcaJ(false);detectaNuevos(true);
   const ae=document.activeElement;if(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)&&$('#view').contains(ae)){if(!diferido){diferido=true;ae.addEventListener('blur',()=>{diferido=false;render()},{once:true})}rTicket()}else render();
   }
 function escucha(){try{const ref=db.doc('app/estado');if(typeof ref.onSnapshot!=='function')return;oyendo=true;
@@ -1028,7 +1043,7 @@ if(C&&C.use){
     const timer=setTimeout(()=>status('La nube tarda en responder; se guarda en este navegador.'),10000);
     try{const snap=await db.doc('app/estado').get();clearTimeout(timer);
       const v=val(snap);
-      if(v&&v.json){if(sucio){lastAt=0;await sube();render()}else{S=Object.assign(blank(),JSON.parse(v.json));lastAt=v.at||0;arregla();detectaNuevos(true);render()}}buzon();if(arregla())render();if(!oyendo)escucha();entrante()}
+      if(v&&v.json){if(sucio){lastAt=0;await sube();render()}else{S=Object.assign(blank(),JSON.parse(v.json));lastAt=v.at||0;arregla();marcaJ(false);detectaNuevos(true);render()}}buzon();if(arregla())render();if(!oyendo)escucha();entrante()}
     catch(e){clearTimeout(timer);offl();entrante()}}).catch(()=>{});
 }
 }
