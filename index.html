@@ -67,6 +67,9 @@ main h2{font-size:28px;margin-bottom:4px}
 #cook .run{background:var(--g);color:#fff;border-radius:12px;padding:10px 14px;font:700 22px 'Courier Prime',monospace;display:flex;justify-content:space-between;align-items:center;margin:8px 0}#cook .run button{border:0;background:none;color:#fff;font:600 14px Figtree,sans-serif;text-decoration:underline;cursor:pointer}
 #cook .nv{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:12px}#cook .nv .btn{min-height:60px;font-size:18px}
 .mopen{border-top:1px solid var(--line);padding-bottom:10px}
+.rev{background:var(--card);border:2px solid var(--g);border-radius:16px;padding:14px 16px;margin:12px 0 8px}.rev b{display:block;font-size:17px}.rev>span{display:block;color:var(--mute);font-size:14px;margin:2px 0 8px}
+.rvr{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}.rvr small{display:block;color:var(--mute);font-size:13px}
+.rvr button{min-height:42px;border-radius:10px;padding:6px 10px;font:600 14px Figtree,sans-serif;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink)}.rvr button.c{background:var(--g);color:#fff;border-color:var(--g)}
 #offl{position:fixed;top:calc(74px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:9;background:var(--ink);color:#fff;font:600 13px Figtree,sans-serif;padding:7px 14px;border-radius:20px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.2)}#offl[hidden]{display:none}
 .hoy{background:var(--g);color:#fff;border-radius:16px;padding:14px 16px;margin:10px 0 16px}.hoy .hk{font:400 15px Righteous,Outfit,sans-serif;letter-spacing:.05em;color:#dfe6c8;margin-bottom:4px}
 .hoy .hl{display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 0;border-top:1px solid rgba(255,255,255,.18)}.hoy .hk+.hl{border-top:0}.hoy .ml{font-size:13px;color:#dfe6c8;font-weight:600}.hoy b{font-weight:600}
@@ -258,7 +261,7 @@ const SB_URL='https://jxswqiirvlyggrdidqnc.supabase.co',SB_KEY='sb_publishable_R
 const CASA=['lostinlaparra@gmail.com','mariateland@gmail.com'];
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 window.CABAC_SB=sb;
-window.CABAC_BUILD='1795788609';
+window.CABAC_BUILD='1795799547';
 {let mirando=false;const mira=async()=>{if(mirando||document.hidden)return;mirando=true;try{const t=await (await fetch('./?v='+Date.now(),{cache:'no-store'})).text();const m=t.match(/CABAC_BUILD='(\d+)'/);
   if(m&&m[1]!==window.CABAC_BUILD){const ae=document.activeElement;if(!(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)))location.reload();}}catch(e){}mirando=false};
  document.addEventListener('visibilitychange',mira);window.addEventListener('focus',mira);setInterval(mira,30*60*1000);setTimeout(mira,4000);}
@@ -471,6 +474,8 @@ function arregla(){let ch=migraSab();if(recupera())ch=true;if(ch)setTimeout(save
   if(ch||S.compra.length!==n0)save();return ch}
 function rPm(id){const x=pmTmp[id];if(!x)return'';return`<button class="sgi" data-act="regpick" data-id="${id}"><span><b>Usar: ${esc(x.n)}</b><br><span class="fm">${esc(x.f)} · ${x.p!=null?eur(x.p):'sin precio'} · ${esc(x.sec)}</span></span></button>`}
 let trSkip=[];
+function rRev(){const R=S.compra.filter(i=>i.rev&&!i.tengo&&!i.hecho);if(!R.length)return'';
+  return`<div class="rev"><b>${R.length} ingrediente${R.length>1?'s':''} de las recetas</b><span>¿Hay algo en casa o en el congelador?</span>${R.map(i=>`<div class="rvr"><span>${esc(i.producto)}${i.formato?' · '+esc(i.formato):''}<small>${esc(i.para||'')}</small></span><button data-act="rvT" data-id="${i.id}">Lo tenemos</button><button class="c" data-act="rvC" data-id="${i.id}">Comprar</button></div>`).join('')}<button class="btn full" data-act="rvTodo">Comprar todo lo demás</button></div>`}
 function rTray(){const P=S.compra.filter(i=>!i.tengo&&!okI(i));if(!P.length)return'';const n=P.length;
   return`<button class="pbar" data-act="trayT" aria-expanded="${trayOpen}"><span class="pd"></span>${n} producto${n>1?'s':''} por concretar<span class="chev">${trayOpen?'⌃':'›'}</span></button>${trayOpen?rTrayB():''}`}
 function rTrayB(){let P=S.compra.filter(i=>!i.tengo&&!okI(i));
@@ -666,7 +671,7 @@ V.compra=()=>{const it=S.compra;
 ${car.length?`<div class="sec">En el carro (${car.length})</div>${car.map(rRow).join('')}`:''}</div>`}
   const md=mediaSem(),TT=totales().t;let h=`${rNueva()}${segC()}${md&&TT?`<p class="ctx">Esta semana <b>≈ ${eur(TT)}</b> · ${Math.abs(TT-md)<1?'como vuestra media':`<span class="${TT>md?'up':'dn'}">${eur(Math.abs(TT-md))} ${TT>md?'más':'menos'}</span> que vuestra media (${eur(md)})`}</p>`:''}<div class="row between"><h2>Mercadona</h2>${it.length?`<button class="mini ${ordOpen?'on':''}" data-act="ordT">Pasillos</button>`:''}</div>${ordOpen?`<div class="box" style="margin:10px 0"><h3>Orden de los pasillos</h3><p class="note" style="margin:2px 0 8px">Ponlos en el orden en que recorréis el súper.</p>${secs().map((x,n,A)=>`<div class="ordr"><span>${esc(x)}</span><button data-act="secmv" data-d="-1" data-s="${esc(x)}" ${n?'':'disabled'} aria-label="Subir ${esc(x)}">↑</button><button data-act="secmv" data-d="1" data-s="${esc(x)}" ${n<A.length-1?'':'disabled'} aria-label="Bajar ${esc(x)}">↓</button></div>`).join('')}<button class="btn full" data-act="ordT">Listo</button></div>`:''}
 <div class="sbox"><input type="search" id="qAdd" value="${esc(qAdd)}" placeholder="Añadir: escribe o pega de Mercadona…" autocomplete="off" aria-label="Añadir a la lista"><div id="sug">${rSug()}</div></div>${!qAdd.trim()?(()=>{const L=siempre();return L.length?`<div class="lds"><span class="lt">Lo de siempre</span><div class="chips">${L.map(c=>`<button data-act="cadd" data-c="${esc(c.k)}" aria-label="Añadir ${esc(c.n)}">${esc(corto(c.n))}</button>`).join('')}</div></div>`:''})():''}
-${busy?`<p class="prog">${esc(busy)}</p>`:''}${rTray()}`;
+${busy?`<p class="prog">${esc(busy)}</p>`:''}${rRev()}${rTray()}`;
   if(!it.length)h+=`<div class="empty">La lista está vacía. Cuando elijas recetas, la lista se hará sola. También puedes añadir cosas con el buscador.</div>`;
   for(const s of secs()){const g=it.filter(i=>i.seccion===s);if(g.length)h+=`<div class="sec">${esc(s)}</div>`+g.map(rRow).join('')}
   if(it.length)h+=`<p class="hint">Desliza ← para quitar · → si ya lo tenéis</p>`;
@@ -756,7 +761,7 @@ async function buscar(keys,otras){
 
 function hashLista(){return comidas().filter(cocina).map(c=>{const r=elegidaDe(c);return r?c.k+':'+r.nombre+':'+c.extra:''}).join('|')}
 let autoT=null;function autoLista(){if(busy||tab!=='compra'||superM)return;const h=hashLista();if(!h.replace(/\|/g,'')||h===S.listaHash)return;clearTimeout(autoT);autoT=setTimeout(()=>{if(!busy&&hashLista()!==S.listaHash)hacerLista()},150)}
-async function hacerLista(){const prev=S.compra.filter(i=>i.origen==='auto'),keep=(arr)=>{for(const n of arr){const o=prev.find(x=>norm(x.ing||x.producto)===norm(n.ing||n.producto));if(o){n.tengo=o.tengo;n.hecho=o.hecho}}return arr};S.listaHash=hashLista();
+async function hacerLista(){const prev=S.compra.filter(i=>i.origen==='auto'),keep=(arr)=>{for(const n of arr){const o=prev.find(x=>norm(x.ing||x.producto)===norm(n.ing||n.producto));if(o){n.tengo=o.tengo;n.hecho=o.hecho;if(o.rev)n.rev=true}else if(!n.tengo)n.rev=true}return arr};S.listaHash=hashLista();
   const sel=comidas().filter(cocina).map(c=>({c,r:elegidaDe(c)})).filter(x=>x.r);
   const lines=[],ex={};
   for(const {c,r} of sel){const f=(2+c.extra)/2,dd=`${DIAS[c.d].slice(0,3)} ${c.m}`;for(const g of (r.ingredientes||[])){if(!g.nombre)continue;
@@ -848,6 +853,9 @@ document.addEventListener('click',e=>{
   else if(a==='open'){openRow=openRow===id?null:id;altOpen=openRow&&item&&!okI(item)?id:null;render()}
   else if(a==='super'){superM=!superM;wake(superM);openRow=null;ordOpen=false;scrollTo(0,0);render()}
   else if(a==='trayT'){trayOpen=!trayOpen;render()}
+  else if(item&&a==='rvT'){item.tengo=true;delete item.rev;save();render();status('«'+item.producto+'»: lo tenéis.',()=>{item.tengo=false;item.rev=true;save();render()})}
+  else if(item&&a==='rvC'){delete item.rev;save();render()}
+  else if(a==='rvTodo'){S.compra.forEach(i=>{delete i.rev});save();render()}
   else if(a==='nwno'){nwNo=true;render()}
   else if(a==='dejartodo'){const P=S.compra.filter(i=>!i.tengo&&!okI(i));P.forEach(i=>i.ok=true);trayOpen=false;save();render();status(P.length+' productos dados por buenos.',()=>{P.forEach(i=>delete i.ok);save();render()})}
   else if(a==='copiaurl'){try{navigator.clipboard.writeText(APPURL).then(()=>status('Enlace copiado.'))}catch(x){status(APPURL)}}
@@ -926,7 +934,7 @@ document.addEventListener('click',e=>{
     ed.ingredientes=ed.ingredientes.filter(g=>g.nombre.trim());for(const g of ed.ingredientes)if(g.merc)g.precio=num(g.precio);
     const p=ed.para;delete ed.para;if(!ed.id)ed.id=uid();const ix=S.libro.findIndex(x=>x.id===ed.id);if(ix>=0)S.libro[ix]=ed;else S.libro.push(ed);
     if(p){S.mias[p]=ed.id;S.elegida[p]=2;tab='recetas'}ed=null;save();status('Receta guardada ✓');render()}
-  else if(item&&a==='hecho'){item.hecho=t.checked;if(t.checked&&okI(item)){S.usos=S.usos||{};const kk=ckey(item);S.usos[kk]=(S.usos[kk]||0)+1}if(navigator.vibrate)navigator.vibrate(10);save();render()}
+  else if(item&&a==='hecho'){item.hecho=t.checked;delete item.rev;if(t.checked&&okI(item)){S.usos=S.usos||{};const kk=ckey(item);S.usos[kk]=(S.usos[kk]||0)+1}if(navigator.vibrate)navigator.vibrate(10);save();render()}
   else if(item&&a==='tengo'){item.tengo=!item.tengo;save();render()}
   else if(item&&a==='mas'){item.envases++;save();render()}
   else if(item&&a==='menos'){item.envases=Math.max(1,item.envases-1);save();render()}
